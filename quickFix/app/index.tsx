@@ -1,23 +1,41 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { PaperProvider } from "react-native-paper";
+import Login from "../Components/Auth/Login";
+import { Stack } from "expo-router";
+import Layout from "./_layout";
+
 export default function App() {
   return (
-    <PaperProvider>
-      <View style={styles.container}>
-        <Text>Finally</Text>
-        <StatusBar style="auto" />
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "",
+        }}
+      />
+      <View style={styles.main}>
+        <Login />
       </View>
-    </PaperProvider>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
+    padding: 24,
+  },
+  main: {
+    flex: 1,
     justifyContent: "center",
+    maxWidth: 960,
+    marginHorizontal: "auto",
+  },
+  title: {
+    fontSize: 64,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 36,
+    color: "#38434D",
   },
 });
