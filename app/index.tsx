@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import Login from "../Components/Auth/Login";
+import Login from "../screens/Auth/Login";
 import { Stack } from "expo-router";
 import Layout from "./_layout";
 import React from "react";
@@ -7,11 +7,11 @@ import React from "react";
 export default function App() {
   return (
     <View style={styles.container}>
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{
           title: "",
         }}
-      />
+      /> */}
       <View style={styles.main}>
         <Login />
       </View>
