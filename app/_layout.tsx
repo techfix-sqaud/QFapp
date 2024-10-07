@@ -3,11 +3,12 @@ import { Platform, Text, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import WebNavigation from "../Components/Navigation/WebNavigation";
 import MobileNav from "../Components/Navigation/MobileNav";
-import Login from "../Components/Auth/Login";
+import Login from "../screens/Auth/Login";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AuthContext from "../contexts/AuthContext";
-import { Slot } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import { authReducer, initialState } from "../contexts/AuthProvider";
+import { ThemeProvider } from "../Helpers/theme/ThemeProvider";
 
 export default function HomeLayout() {
   //const { isAuthenticated } = useContext(AuthContext);
@@ -17,16 +18,16 @@ export default function HomeLayout() {
   const renderContent = () => {
     if (UserState.isAuthenticated) {
       return Platform.OS !== "web" ? (
-        <PaperProvider>
+        <ThemeProvider>
           <SafeAreaView style={{ flex: 1, backgroundColor: "#081c4b" }}>
             <Slot />
             <MobileNav />
           </SafeAreaView>
-        </PaperProvider>
+        </ThemeProvider>
       ) : (
         <>
           <WebNavigation />
-          <Slot />
+          <Stack />
         </>
       );
     } else {

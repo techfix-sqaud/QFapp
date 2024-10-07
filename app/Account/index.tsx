@@ -1,13 +1,9 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import SignUp from "../../Components/Auth/SignUp";
+//import SignUp from "../../screens/Auth/SignUp";
 
 const Account = () => {
-  return (
-    <View style={styles.main}>
-      <SignUp />
-    </View>
-  );
+  return <View style={styles.main}>{/* <SignUp /> */}</View>;
 };
 const styles = StyleSheet.create({
   container: {
