@@ -6,6 +6,7 @@ import { FONTS } from "./constants/fonts";
 import { LogBox } from "react-native";
 import { ThemeProvider } from "./Helpers/theme/ThemeProvider";
 import App from "./app";
+import React from "react";
 
 LogBox.ignoreAllLogs();
 
