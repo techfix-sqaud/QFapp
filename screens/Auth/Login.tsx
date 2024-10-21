@@ -28,11 +28,8 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string[]>([""]);
   const [checked, setChecked] = useState<boolean>(false);
-  const { dispatch } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext)!;
   const { colors, dark } = useTheme();
-
-  console.log("colors", colors);
-  console.log("dark", dark);
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -92,12 +89,6 @@ const Login = () => {
         "Invalid credentials. Please check your username and password and try again.",
       ]);
     }
-  };
-  const handleForgotPasswordPress = () => {
-    router.push("/ForgotPassword");
-  };
-  const handleCreateAccount = () => {
-    router.push("/SignUp");
   };
 
   // implementing apple authentication
@@ -176,7 +167,9 @@ const Login = () => {
 
           <View>
             <View>
-              <TouchableOpacity onPress={() => handleForgotPasswordPress}>
+              <TouchableOpacity
+                onPress={() => router.push("Account/ForgotPassword")}
+              >
                 <Text style={styles.forgotPasswordBtnText}>
                   Forgot the password?
                 </Text>
@@ -209,7 +202,11 @@ const Login = () => {
           >
             Don't have an account ?
           </Text>
-          <TouchableOpacity onPress={() => handleCreateAccount}>
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/Account/signup");
+            }}
+          >
             <Text style={styles.bottomRight}>Sign Up</Text>
           </TouchableOpacity>
         </View>

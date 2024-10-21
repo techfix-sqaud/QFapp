@@ -5694,6 +5694,11 @@ react-native-gesture-handler@~2.12.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
+react-native-otp-entry@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/react-native-otp-entry/-/react-native-otp-entry-1.7.2.tgz#4d0d2d255b8b3f7c99fcc414acd9b19b4737d862"
+  integrity sha512-95QQjBl79E/GKNBg9hY3Vib4L25hBEPm4uOX1WA3hc2SJo0dFWn0hUMgtAnCeZdm1MYJQwvpBwTE1IwbuixPRA==
+
 react-native-paper@^5.10.4:
   version "5.10.4"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-5.10.4.tgz#b96f6af9f2f888ad4addb8914cc36edaac72c3d4"
