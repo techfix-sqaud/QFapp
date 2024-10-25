@@ -20,6 +20,7 @@ import { images, icons } from "../../constants";
 import { initialState } from "../../contexts/AuthProvider";
 import Button from "../../Components/custom/Button";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
+import Header from "../../Components/custom/Head";
 const Login = () => {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
@@ -79,7 +80,7 @@ const Login = () => {
           //expires: expirationDate,
         },
       });
-      router.push("/Providers");
+      router.push("/Dashbaord");
       const rememberMeStored = await AsyncStorage.getItem("rememberMe");
       const storedEmail = AsyncStorage.getItem("email");
       // localStorage.setItem("token", token);
@@ -125,7 +126,7 @@ const Login = () => {
       >
         {/* <Card style={styles.card}> */}
 
-        {/* <Header /> */}
+        <Header title="Login" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.logoContainer}>
             <Image
