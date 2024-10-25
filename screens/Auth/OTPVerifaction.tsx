@@ -6,6 +6,7 @@ import { COLORS } from "../../constants";
 import { OtpInput } from "react-native-otp-entry";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
 import Button from "../../Components/custom/Button";
+import Header from "../../Components/custom/Head";
 
 const OTPVerification = () => {
   const [time, setTime] = useState(55);
@@ -24,7 +25,7 @@ const OTPVerification = () => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        {/* <Header title="Forgot Password" /> */}
+        <Header title="OTP Verification" />
         <ScrollView>
           <Text
             style={[

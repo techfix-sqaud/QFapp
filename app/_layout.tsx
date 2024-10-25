@@ -133,6 +133,10 @@ import { ThemeProvider } from "../Helpers/theme/ThemeProvider";
 import WebNavigation from "../Components/Navigation/WebNavigation";
 import AuthContext from "../contexts/AuthContext";
 import { authReducer, initialState } from "../contexts/AuthProvider";
+//import MobileNav from "../Components/Navigation/MobileNav";
+import BottomNav from "../Components/Navigation/BottomNav";
+
+import { NavigationContainer } from "@react-navigation/native"; // Import NavigationContainer
 const Layout = () => {
   const [UserState, dispatch] = useReducer(authReducer, initialState);
   const publicRoutes = ["/", "/Account/Login", "/Account/Signup"];
@@ -140,7 +144,7 @@ const Layout = () => {
   const isAnonymous =
     path === "/" || publicRoutes.includes(path.split("/")[1]?.toLowerCase());
   const renderContent = () => {
-    if (!isAnonymous) {
+    if (Platform.OS !== "web") {
       console.log("path", path);
       return (
         <GestureHandlerRootView>
@@ -149,6 +153,7 @@ const Layout = () => {
               <ScrollView>
                 <Slot />
               </ScrollView>
+              {!isAnonymous && UserState.isAuthenticated && <BottomNav />}
             </KeyboardAvoidingView>
           </SafeAreaView>
         </GestureHandlerRootView>
