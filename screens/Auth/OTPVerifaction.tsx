@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { COLORS } from "../../constants";
@@ -7,10 +7,15 @@ import { OtpInput } from "react-native-otp-entry";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
 import Button from "../../Components/custom/Button";
 import Header from "../../Components/custom/Head";
+import ValidationContext from "../../contexts/ValidationContext";
+import useLogin from "../../hooks/useLogin";
 
 const OTPVerification = () => {
   const [time, setTime] = useState(55);
   const { colors, dark } = useTheme();
+  const [otpCode, setOtpCode] = useState<string>("");
+  const { userId } = useContext(ValidationContext)!;
+  const { HandleLogin, Validate } = useLogin();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -21,6 +26,12 @@ const OTPVerification = () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  const handleVerify = async (e: any) => {
+    const validation = await Validate(otpCode, userId.userId);
+    console.log("validation", validation);
+    await HandleLogin(validation.token, validation.expires, true);
+  };
 
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
@@ -35,14 +46,14 @@ const OTPVerification = () => {
               },
             ]}
           >
-            Code has been send to +1 111 ******99
+            Code has been send to your email
           </Text>
           <OtpInput
-            numberOfDigits={4}
+            numberOfDigits={6}
             onTextChange={(text) => console.log(text)}
             focusColor={COLORS.primary}
             focusStickBlinkingDuration={500}
-            onFilled={(text) => console.log(`OTP is ${text}`)}
+            onFilled={(text) => setOtpCode(text)}
             theme={{
               pinCodeContainerStyle: {
                 backgroundColor: dark ? COLORS.dark2 : COLORS.secondaryWhite,
@@ -83,7 +94,7 @@ const OTPVerification = () => {
         </ScrollView>
         <Button
           title="Verify"
-          onPress={(e: any) => console.log(e)}
+          onPress={(e: any) => handleVerify(e)}
           color={COLORS.primary}
           style={styles.button}
         />

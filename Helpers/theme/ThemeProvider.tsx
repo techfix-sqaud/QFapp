@@ -57,6 +57,4 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     </ThemeContext.Provider>
   );
 };
-
-// Custom hook to access the theme
 export const useTheme = () => useContext(ThemeContext);
