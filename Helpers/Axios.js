@@ -1,6 +1,6 @@
 import axios from "axios";
-//const baseURL = process.env.REACT_APP_TECHFIX_API;
-const baseURL = "http://localhost:5324/quickfix";
+const baseURL = process.env.REACT_APP_QUICKFIX_API;
+//const baseURL = "http://localhost:5324/quickfix";
 const quickFixAPI = axios.create({
   baseURL: baseURL,
   Header: {
