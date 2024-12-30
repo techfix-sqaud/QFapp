@@ -1,47 +1,105 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Alert } from "react-native";
+import quickFixAPI, { configartion } from "../Helpers/Axios";
+import AuthContext from "../contexts/AuthContext";
+import { useRouter } from "expo-router";
+import ValidationContext from "../contexts/ValidationContext";
 
 const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { userProfile, dispatch } = useContext(AuthContext)!;
+  const { validationDispatch } = useContext(ValidationContext)!;
 
-  const login = async (username: string, password: string) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Replace with your actual login logic, e.g., API call
-      const response = await fakeApiLogin(username, password);
-      if (response.success) {
-        // Handle successful login
-        Alert.alert("Login Successful", "Welcome back!");
-      } else {
-        // Handle login failure
-        setError(response.message);
-        Alert.alert("Login Failed", response.message);
+  const router = useRouter();
+  const HandleLogin = async (
+    token: string,
+    expires: Date,
+    redirect?: boolean
+  ) => {
+    if (token) {
+      configartion(token);
+      console.log("expires", expires);
+      try {
+        const response = await quickFixAPI.get("/Users/profile");
+        const user = response.data;
+        console.log(response.data);
+        dispatch({
+          type: "LOGIN",
+          payload: {
+            isAuthenticated: true,
+            userId: user.id,
+            role: user.role,
+            profile: user.profile,
+            firstName: user.firstName,
+            lastName: user.last_name,
+            token: token,
+            expires: expires,
+          },
+        });
+        if (redirect) {
+          if (user.role_id === 1) {
+            console.log("redirecting to dashboard");
+            router.push("/Dashboard");
+          } else router.push("/");
+        }
+      } catch (error) {
+        setError("An unexpected error occurred.");
+        Alert.alert("Login Failed", "An unexpected error occurred.");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError("An unexpected error occurred.");
-      Alert.alert("Login Failed", "An unexpected error occurred.");
-    } finally {
-      setLoading(false);
     }
   };
 
-  return { login, loading, error };
-};
+  const Validate = async (code: string, userId: number) => {
+    const response = await quickFixAPI.post("/Account/validate", {
+      userId: userId,
+      code: code,
+    });
+    return response.data;
+  };
 
-// Fake API login function for demonstration purposes
-const fakeApiLogin = async (username: string, password: string) => {
-  return new Promise<{ success: boolean; message: string }>((resolve) => {
-    setTimeout(() => {
-      if (username === "user" && password === "pass") {
-        resolve({ success: true, message: "Login successful" });
-      } else {
-        resolve({ success: false, message: "Invalid credentials" });
+  const requestLogin = async (
+    email: string,
+    password: string,
+    setErrorMessage: (message: string) => void
+  ) => {
+    console.log("requestLogin");
+    try {
+      console.log("email", email);
+      let data;
+      try {
+        const response = await quickFixAPI.post("/Account/login", {
+          EmailOrUserName: email,
+          Password: password,
+        });
+        console.log("response", response);
+        data = response.data;
+      } catch (error) {
+        console.error("Login request failed", error);
+        setErrorMessage(
+          "An error occurred while trying to log in. Please try again."
+        );
+        return;
       }
-    }, 1000);
-  });
+      console.log("data", data);
+      if (data.requiresValidation) {
+        validationDispatch({
+          type: "SET_USER_ID",
+          payload: { userId: data.userId },
+        });
+        router.push("/Account/OTPVerification");
+      } else {
+        await HandleLogin(data.token, data.expires, true);
+      }
+    } catch (error) {
+      setErrorMessage(
+        "Invalid credentials. Please check your username and password and try again."
+      );
+    }
+  };
+  return { HandleLogin, loading, error, Validate, requestLogin };
 };
 
 export default useLogin;

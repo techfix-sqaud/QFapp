@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { router, useRouter } from "expo-router";
 import quickFixAPI from "../../Helpers/Axios";
@@ -21,78 +22,127 @@ import { initialState } from "../../contexts/AuthProvider";
 import Button from "../../Components/custom/Button";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
 import Header from "../../Components/custom/Head";
+import ValidationContext from "../../contexts/ValidationContext";
+import useLogin from "../../hooks/useLogin";
 const Login = () => {
   const router = useRouter();
+  const { setUserId } = useContext(ValidationContext)!;
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string[]>([""]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorRequiredFields, setErrorRequiredFields] = useState<string[]>([
+    "",
+  ]);
   const [checked, setChecked] = useState<boolean>(false);
-  const { dispatch } = useContext(AuthContext)!;
-  const { colors, dark } = useTheme();
+  const { colors, dark, setScheme } = useTheme();
+  const { requestLogin } = useLogin();
+  console.log("login", colors);
+  // const handleLogin = async (e: any) => {
+  //   console.log("Login", email, password);
+  //   e.preventDefault();
+  //   if (!email || !password) {
+  //     setErrorMessage(["Please fill in all required fields."]);
+  //     return;
+  //   }
+  //   try {
+  //     const response = await quickFixAPI.post("/Account/login", {
+  //       EmailOrUserName: email,
+  //       Password: password,
+  //     });
+  //     console.log("response", response);
+  //     const data = response.data;
+
+  //     // const role = data.role;
+  //     // const token = data.token;
+  //     // console.log("data", data);
+  //     // // localStorage.setItem("user", JSON.stringify(data));
+  //     // await AsyncStorage.setItem("user", JSON.stringify(data));
+
+  //     // const expirationDate = new Date();
+  //     // expirationDate.setHours(expirationDate.getHours() + 8);
+
+  //     // expirationDate.setDate(expirationDate.getDate() + 1);
+  //     // // localStorage.setItem("token", token);
+  //     // // localStorage.setItem("expires", expirationDate.toISOString());
+  //     // await AsyncStorage.setItem("user", JSON.stringify(data));
+  //     // await AsyncStorage.setItem("token", token);
+  //     // await AsyncStorage.setItem("expires", expirationDate.toISOString());
+
+  //     // // if (rememberMe) {
+  //     // //   localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
+  //     // //   localStorage.setItem("email", JSON.stringify(email));
+  //     // // }
+  //     // // if (!rememberMe) {
+  //     // //   localStorage.removeItem("email");
+  //     // //   localStorage.removeItem("rememberMe");
+  //     // // }
+  //     // dispatch({
+  //     //   type: "LOGIN",
+  //     //   payload: {
+  //     //     isAuthnticated: true,
+  //     //     role,
+  //     //     profile: data.profile,
+  //     //     firstName: data.firstName,
+  //     //     lastName: data.last_name,
+  //     //     token: token,
+  //     //     //expires: expirationDate,
+  //     //   },
+  //     //});
+  //     // router.push("/Dashbaord");
+  //     // const rememberMeStored = await AsyncStorage.getItem("rememberMe");
+  //     // const storedEmail = AsyncStorage.getItem("email");
+  //     // localStorage.setItem("token", token);
+  //     // localStorage.setItem("expires", expirationDate.toISOString());
+  //     if (data.requiresValidation) {
+  //       console.log("data", data);
+  //       validationDispatch({
+  //         type: "SET_USER_ID",
+  //         payload: { userId: data.userId },
+  //       });
+  //       router.push("/Account/OTPVerification");
+  //     }
+  //   } catch (error) {
+  //     console.log("error", error);
+  //     setErrorMessage([
+  //       "Invalid credentials. Please check your username and password and try again.",
+  //     ]);
+  //   }
+  // };
+
+  // implementing apple authentication
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
     if (!email || !password) {
-      setErrorMessage(["Please fill in all required fields."]);
+      setErrorRequiredFields(["Please fill in all required fields."]);
       return;
     }
-    try {
-      const response = await quickFixAPI.post("Users/login", {
-        EmailOrUserName: email,
-        Password: password,
-      });
-      const data = response.data;
-      const role = data.role;
-      const token = data.token;
-      console.log("data", data);
-      // localStorage.setItem("user", JSON.stringify(data));
-      await AsyncStorage.setItem("user", JSON.stringify(data));
 
-      const expirationDate = new Date();
-      expirationDate.setHours(expirationDate.getHours() + 8);
+    requestLogin(email, password, setErrorMessage);
 
-      expirationDate.setDate(expirationDate.getDate() + 1);
-      // localStorage.setItem("token", token);
-      // localStorage.setItem("expires", expirationDate.toISOString());
-      await AsyncStorage.setItem("user", JSON.stringify(data));
-      await AsyncStorage.setItem("token", token);
-      await AsyncStorage.setItem("expires", expirationDate.toISOString());
+    // try {
+    //   const response = await quickFixAPI.post("/Account/login", {
+    //     EmailOrUserName: email,
+    //     Password: password,
+    //   });
+    //   const data = response.data;
 
-      // if (rememberMe) {
-      //   localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
-      //   localStorage.setItem("email", JSON.stringify(email));
-      // }
-      // if (!rememberMe) {
-      //   localStorage.removeItem("email");
-      //   localStorage.removeItem("rememberMe");
-      // }
-      dispatch({
-        type: "LOGIN",
-        payload: {
-          isAuthnticated: true,
-          role,
-          profile: data.profile,
-          firstName: data.firstName,
-          lastName: data.last_name,
-          token: token,
-          //expires: expirationDate,
-        },
-      });
-      router.push("/Dashbaord");
-      const rememberMeStored = await AsyncStorage.getItem("rememberMe");
-      const storedEmail = AsyncStorage.getItem("email");
-      // localStorage.setItem("token", token);
-      // localStorage.setItem("expires", expirationDate.toISOString());
-    } catch (error) {
-      setErrorMessage([
-        "Invalid credentials. Please check your username and password and try again.",
-      ]);
-    }
+    //   if (data.requiresValidation) {
+    //     validationDispatch({
+    //       type: "SET_USER_ID",
+    //       payload: { userId: data.userId },
+    //     });
+    //     router.push("/Account/OTPVerification");
+    //   }
+    // } catch (error) {
+    //   setErrorMessage([
+    //     "Invalid credentials. Please check your username and password and try again.",
+    //   ]);
+    // }
   };
 
-  // implementing apple authentication
   const appleAuthHandler = () => {
     console.log("Apple Authentication");
   };
@@ -135,27 +185,31 @@ const Login = () => {
               style={styles.logo}
             />
           </View>
-          {/* {errorMessage && <Text>{errorMessage}</Text>} */}
+          {errorMessage && <Text>{errorMessage}</Text>}
           <Input
             id="email"
             onInputChanged={(id, value) => {
               setEmail(value);
             }}
+            autoCapitalize="none"
             placeholder="Email"
             placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
             icon={icons.email}
-            keyboardType="email-address"
+            keyboardType={"default"}
+            textContentType="emailAddress"
           />
-
           <Input
             onInputChanged={(id, value) => setPassword(value)}
-            errorText={errorMessage.length > 0 ? errorMessage : []}
+            errorText={
+              errorRequiredFields.length > 0 ? errorRequiredFields : []
+            }
             autoCapitalize="none"
             id="password"
             placeholder="Password"
             placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
             icon={icons.padlock}
-            secureTextEntry={true}
+            secureTextEntry={!showPassword}
+            textContentType="password"
           />
           <Button
             filled={true}

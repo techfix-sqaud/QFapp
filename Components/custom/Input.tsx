@@ -68,6 +68,7 @@ const Input = (props: InputProps) => {
           onChangeText={handleChangeText}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          keyboardType={"default"}
           style={[styles.input, { color: dark ? COLORS.white : COLORS.black }]}
           placeholder={props.placeholder}
           placeholderTextColor={props.placeholderTextColor}

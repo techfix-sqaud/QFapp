@@ -35,39 +35,82 @@ const ForgotPasswordForm = () => {
   };
 
   return (
-    <SafeAreaView
-      style={[
-        styles.area,
-        {
-          backgroundColor: colors.background,
-        },
-      ]}
-    >
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: colors.background,
-          },
-        ]}
-      >
+    // <SafeAreaView
+    //   style={[
+    //     //styles.area,
+    //     {
+    //       backgroundColor: "red", //colors.background,
+    //     },
+    //   ]}
+    // >
+    //   {/* <View
+    //     style={[
+    //       styles.container,
+    //       {
+    //         backgroundColor: "red", //colors.background,
+    //       },
+    //     ]}
+    //   > */}
+    //   {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+    //   <View style={styles.logoContainer}>
+    //     <Image source={images.logo} resizeMode="contain" style={styles.logo} />
+    //   </View>
+    //   <Text
+    //     style={[
+    //       styles.title,
+    //       {
+    //         color: dark ? COLORS.white : COLORS.black,
+    //       },
+    //     ]}
+    //   >
+    //     Reset your password
+    //   </Text>
+    //   <Input
+    //     id="email"
+    //     onInputChanged={(id, value) => {
+    //       setEmail(value);
+    //     }}
+    //     placeholder="Email"
+    //     placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
+    //     icon={icons.email}
+    //     errorText={errorMessage.length > 0 ? errorMessage : []}
+    //     keyboardType="email-address"
+    //   />
+
+    //   <Button
+    //     filled={true}
+    //     title="Submit"
+    //     onPress={(e: any) => handleResetPassowrd(e)}
+    //     style={styles.button}
+    //   >
+    //     Submit
+    //   </Button>
+    //   {/* </ScrollView> */}
+    //   {/* </View> */}
+    // </SafeAreaView>
+
+    <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        {/* <Header title="Change Password" /> */}
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.logoContainer}>
-            <Image
-              source={images.logo}
+            {/* <Image
+              source={
+                dark
+                  ? illustrations.passwordSuccessDark
+                  : illustrations.newPassword
+              }
               resizeMode="contain"
-              style={styles.logo}
-            />
+              style={styles.success}
+            /> */}
           </View>
           <Text
             style={[
               styles.title,
-              {
-                color: dark ? COLORS.white : COLORS.black,
-              },
+              { color: dark ? COLORS.white : COLORS.black },
             ]}
           >
-            Reset your password
+            Reset Password
           </Text>
           <Input
             id="email"
@@ -81,15 +124,31 @@ const ForgotPasswordForm = () => {
             keyboardType="email-address"
           />
 
-          <Button
-            filled={true}
-            title="Submit"
-            onPress={(e: any) => handleResetPassowrd(e)}
-            style={styles.button}
-          >
-            Submit
-          </Button>
+          <View style={styles.checkBoxContainer}>
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={[
+                    styles.privacy,
+                    {
+                      color: dark ? COLORS.white : COLORS.black,
+                    },
+                  ]}
+                >
+                  Remember me
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View></View>
         </ScrollView>
+        <Button
+          title="Continue"
+          filled
+          onPress={(): void => console.log(true)}
+          style={styles.button}
+        />
+        {/* {renderModal()} */}
       </View>
     </SafeAreaView>
   );
@@ -101,9 +160,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: COLORS.white,
+    // flex: 1,
+    // padding: 16,
+    height: "100%",
+    backgroundColor: "red", //COLORS.white,
   },
   logo: {
     width: 100,
