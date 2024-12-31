@@ -29,7 +29,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [themeScheme, setThemeScheme] = useState<"dark" | "light" | "system">(
     "system"
   );
-  console.log("systemColorScheme", systemColorScheme);
   const [isDark, setIsDark] = useState(systemColorScheme === "dark");
 
   useEffect(() => {

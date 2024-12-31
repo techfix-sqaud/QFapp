@@ -19,11 +19,9 @@ const useLogin = () => {
   ) => {
     if (token) {
       configartion(token);
-      console.log("expires", expires);
       try {
         const response = await quickFixAPI.get("/Users/profile");
         const user = response.data;
-        console.log(response.data);
         dispatch({
           type: "LOGIN",
           payload: {
@@ -39,7 +37,6 @@ const useLogin = () => {
         });
         if (redirect) {
           if (user.role_id === 1) {
-            console.log("redirecting to dashboard");
             router.push("/Dashboard");
           } else router.push("/");
         }
@@ -65,16 +62,13 @@ const useLogin = () => {
     password: string,
     setErrorMessage: (message: string) => void
   ) => {
-    console.log("requestLogin");
     try {
-      console.log("email", email);
       let data;
       try {
         const response = await quickFixAPI.post("/Account/login", {
           EmailOrUserName: email,
           Password: password,
         });
-        console.log("response", response);
         data = response.data;
       } catch (error) {
         console.error("Login request failed", error);
@@ -83,7 +77,6 @@ const useLogin = () => {
         );
         return;
       }
-      console.log("data", data);
       if (data.requiresValidation) {
         validationDispatch({
           type: "SET_USER_ID",

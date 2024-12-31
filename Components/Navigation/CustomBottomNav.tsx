@@ -1,13 +1,9 @@
-import { router } from "expo-router";
-import React from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-  StyleSheet,
-  Platform,
-} from "react-native";
+import { useRouter } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { COLORS } from "../../constants";
+import { tabs } from "../../Helpers/menusTabsMobile";
 
 interface NavItem {
   label: string;
@@ -28,91 +24,55 @@ const CustomBottomNav: React.FC<CustomBottomNavProps> = ({
   onItemPress,
   activeIndex,
 }) => {
+  const router = useRouter();
   return (
-    // <View style={styles.container}>
-    //   {items?.map((item, index) => (
-    //     <TouchableOpacity
-    //       key={item.label}
-    //       style={styles.tab}
-    //       onPress={() => router.push(item.path)} // Use router.push with the path
-    //     >
-    //       <Image
-    //         source={item.icon}
-    //         style={[
-    //           styles.icon,
-    //           {
-    //             tintColor:
-    //               activeIndex === index ? item.activeColor : item.inactiveColor,
-    //           },
-    //         ]}
-    //       />
-    //       <Text
-    //         style={[
-    //           styles.label,
-    //           {
-    //             color:
-    //               activeIndex === index ? item.activeColor : item.inactiveColor,
-    //           },
-    //         ]}
-    //       >
-    //         {item.label}
-    //       </Text>
-    //     </TouchableOpacity>
-    //   ))}
-    // </View>
     <View style={styles.container}>
-      {/* <View style={[styles.container, { height: menuHeight }]}> */}
-      {/* <TouchableOpacity onPress={() => router.push("/Clients")}>
-        <Text style={styles.label}>Home</Text>
-      </TouchableOpacity> */}
-      <Text style={styles.label}>About</Text>
-      <Text style={styles.label}>Services</Text>
-      <Text style={styles.label}>Contact</Text>
+      <View style={styles.tabBar}>
+        {tabs.map((tab) => (
+          <TouchableOpacity
+            key={tab.name}
+            style={styles.tabItem}
+            onPress={() => router.push(tab.path)}
+          >
+            <FontAwesome
+              name={tab.icon as keyof typeof FontAwesome.glyphMap} // This now matches the allowed type
+              size={24}
+              color={tab.path ? "#fff" : "#aaa"}
+            />
+            <Text style={{ color: tab.path ? "#fff" : "#aaa" }}>
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  //   container: {
-  //     flexDirection: "row",
-  //     position: "absolute",
-  //     justifyContent: "space-around",
-  //     alignItems: "center",
-  //     height: Platform.OS === "ios" ? 90 : 60, // Adjust height for iOS and Android
-  //     backgroundColor: "#290ca8", // Background color of the nav
-  //     borderTopWidth: 1,
-  //     borderTopColor: "#ccc", // Optional border color
-  //     elevation: 5, // Shadow for Android
-  //     shadowColor: "#000", // Shadow for iOS
-  //     shadowOffset: { width: 0, height: 2 },
-  //     shadowOpacity: 0.3,
-  //     shadowRadius: 4,
-  //   },
   container: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#081c4b",
-    paddingVertical: 10,
-    position: "absolute",
-    bottom: 0,
-    marginBottom: 3,
-    width: "100%",
+    justifyContent: "space-between",
+    backgroundColor: COLORS.primary,
   },
-  tab: {
+  contentContainer: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 10,
+    alignItems: "center",
   },
-  icon: {
-    width: 24,
-    height: 24,
-    marginBottom: 5,
-  },
-  label: {
+  contentText: {
     color: "#fff",
-    fontSize: 12,
+    fontSize: 20,
+  },
+  tabBar: {
+    flexDirection: "row",
+    height: 60,
+    borderTopWidth: 1,
+    borderColor: "#333",
+  },
+  tabItem: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
