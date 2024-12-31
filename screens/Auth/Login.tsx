@@ -38,80 +38,6 @@ const Login = () => {
   const [checked, setChecked] = useState<boolean>(false);
   const { colors, dark, setScheme } = useTheme();
   const { requestLogin } = useLogin();
-  console.log("login", colors);
-  // const handleLogin = async (e: any) => {
-  //   console.log("Login", email, password);
-  //   e.preventDefault();
-  //   if (!email || !password) {
-  //     setErrorMessage(["Please fill in all required fields."]);
-  //     return;
-  //   }
-  //   try {
-  //     const response = await quickFixAPI.post("/Account/login", {
-  //       EmailOrUserName: email,
-  //       Password: password,
-  //     });
-  //     console.log("response", response);
-  //     const data = response.data;
-
-  //     // const role = data.role;
-  //     // const token = data.token;
-  //     // console.log("data", data);
-  //     // // localStorage.setItem("user", JSON.stringify(data));
-  //     // await AsyncStorage.setItem("user", JSON.stringify(data));
-
-  //     // const expirationDate = new Date();
-  //     // expirationDate.setHours(expirationDate.getHours() + 8);
-
-  //     // expirationDate.setDate(expirationDate.getDate() + 1);
-  //     // // localStorage.setItem("token", token);
-  //     // // localStorage.setItem("expires", expirationDate.toISOString());
-  //     // await AsyncStorage.setItem("user", JSON.stringify(data));
-  //     // await AsyncStorage.setItem("token", token);
-  //     // await AsyncStorage.setItem("expires", expirationDate.toISOString());
-
-  //     // // if (rememberMe) {
-  //     // //   localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
-  //     // //   localStorage.setItem("email", JSON.stringify(email));
-  //     // // }
-  //     // // if (!rememberMe) {
-  //     // //   localStorage.removeItem("email");
-  //     // //   localStorage.removeItem("rememberMe");
-  //     // // }
-  //     // dispatch({
-  //     //   type: "LOGIN",
-  //     //   payload: {
-  //     //     isAuthnticated: true,
-  //     //     role,
-  //     //     profile: data.profile,
-  //     //     firstName: data.firstName,
-  //     //     lastName: data.last_name,
-  //     //     token: token,
-  //     //     //expires: expirationDate,
-  //     //   },
-  //     //});
-  //     // router.push("/Dashbaord");
-  //     // const rememberMeStored = await AsyncStorage.getItem("rememberMe");
-  //     // const storedEmail = AsyncStorage.getItem("email");
-  //     // localStorage.setItem("token", token);
-  //     // localStorage.setItem("expires", expirationDate.toISOString());
-  //     if (data.requiresValidation) {
-  //       console.log("data", data);
-  //       validationDispatch({
-  //         type: "SET_USER_ID",
-  //         payload: { userId: data.userId },
-  //       });
-  //       router.push("/Account/OTPVerification");
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     setErrorMessage([
-  //       "Invalid credentials. Please check your username and password and try again.",
-  //     ]);
-  //   }
-  // };
-
-  // implementing apple authentication
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -119,40 +45,17 @@ const Login = () => {
       setErrorRequiredFields(["Please fill in all required fields."]);
       return;
     }
-
     requestLogin(email, password, setErrorMessage);
-
-    // try {
-    //   const response = await quickFixAPI.post("/Account/login", {
-    //     EmailOrUserName: email,
-    //     Password: password,
-    //   });
-    //   const data = response.data;
-
-    //   if (data.requiresValidation) {
-    //     validationDispatch({
-    //       type: "SET_USER_ID",
-    //       payload: { userId: data.userId },
-    //     });
-    //     router.push("/Account/OTPVerification");
-    //   }
-    // } catch (error) {
-    //   setErrorMessage([
-    //     "Invalid credentials. Please check your username and password and try again.",
-    //   ]);
-    // }
   };
 
   const appleAuthHandler = () => {
     console.log("Apple Authentication");
   };
 
-  // implementing facebook authentication
   const facebookAuthHandler = () => {
     console.log("Facebook Authentication");
   };
 
-  // Implementing google authentication
   const googleAuthHandler = () => {
     console.log("Google Authentication");
   };

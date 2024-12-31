@@ -34,19 +34,16 @@ const Layout = () => {
     validationReducer,
     initialValidationState
   );
-  //const { colors, dark } = useTheme();
+
   const { colors, dark, setScheme } = useTheme();
-  //const context = useContext(ThemeContext);
-  //console.log("dark,", context);
+
   const layoutBackground = colors.background;
-  console.log("colors layout", colors);
   const publicRoutes = ["/", "/Account/Login", "/Account/Signup"];
   const path = usePathname();
   const isAnonymous =
     path === "/" || publicRoutes.includes(path.split("/")[1]?.toLowerCase());
   const renderContent = () => {
     if (Platform.OS !== "web") {
-      console.log("path", path);
       return (
         <ThemeProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
@@ -57,9 +54,18 @@ const Layout = () => {
               ]}
             >
               <KeyboardAvoidingView
+                style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
               >
-                <ScrollView>
+                <ScrollView
+                  automaticallyAdjustKeyboardInsets
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    marginBottom: !isAnonymous ? 0 : 20,
+                  }}
+                  contentContainerStyle={{ flexGrow: 1 }}
+                >
                   <Slot />
                 </ScrollView>
                 {!isAnonymous && UserState.isAuthenticated && <BottomNav />}
@@ -88,16 +94,13 @@ const Layout = () => {
           </style>
         </Head>
       )}
-      <ThemeProvider>
-        <SafeAreaView style={{ flex: 1 }}>
-          <ValidationContext.Provider value={{ userId, validationDispatch }}>
-            <AuthContext.Provider value={{ UserState, dispatch }}>
-              {renderContent()}
-              <StatusBar style="auto" />
-            </AuthContext.Provider>
-          </ValidationContext.Provider>
-        </SafeAreaView>
-      </ThemeProvider>
+
+      <ValidationContext.Provider value={{ userId, validationDispatch }}>
+        <AuthContext.Provider value={{ UserState, dispatch }}>
+          {renderContent()}
+          <StatusBar style="auto" />
+        </AuthContext.Provider>
+      </ValidationContext.Provider>
     </>
   );
 };

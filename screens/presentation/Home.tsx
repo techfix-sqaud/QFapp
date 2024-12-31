@@ -198,7 +198,7 @@ const Home = () => {
           data={categories}
           keyExtractor={(item, index) => index.toString()}
           horizontal={false}
-          numColumns={4} // Render two items per row
+          numColumns={4}
           renderItem={({ item, index }) => (
             <Category
               name={item.name}

@@ -29,7 +29,6 @@ const OTPVerification = () => {
 
   const handleVerify = async (e: any) => {
     const validation = await Validate(otpCode, userId.userId);
-    console.log("validation", validation);
     await HandleLogin(validation.token, validation.expires, true);
   };
 
@@ -50,7 +49,6 @@ const OTPVerification = () => {
           </Text>
           <OtpInput
             numberOfDigits={6}
-            onTextChange={(text) => console.log(text)}
             focusColor={COLORS.primary}
             focusStickBlinkingDuration={500}
             onFilled={(text) => setOtpCode(text)}

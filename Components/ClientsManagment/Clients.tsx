@@ -3,7 +3,6 @@ import { View, Text } from "react-native";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
 const Clients = () => {
   const { dark, colors } = useTheme();
-  console.log("rec", colors);
   return (
     <View>
       <Text style={{ backgroundColor: colors.background }}>
