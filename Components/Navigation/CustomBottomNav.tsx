@@ -4,64 +4,72 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { COLORS } from "../../constants";
 import { tabs } from "../../Helpers/menusTabsMobile";
+import SideNav from "./MobileNav";
+import { useTheme } from "../../Helpers/theme/ThemeProvider";
 
 interface NavItem {
   label: string;
-  icon: any; // You can replace 'any' with the specific type for your icons
-  activeColor: string;
-  inactiveColor: string;
-  path: string; // Add the path property
+  icon: string; // Use the string type for FontAwesome icons
+  path: string;
 }
 
-interface CustomBottomNavProps {
-  items?: NavItem[];
-  onItemPress?: (index: number) => void;
-  activeIndex?: number;
-}
-
-const CustomBottomNav: React.FC<CustomBottomNavProps> = ({
-  items,
-  onItemPress,
-  activeIndex,
-}) => {
+const CustomBottomNav = () => {
+  const [activeIndex, setActiveIndex] = useState<number>(0); // Track active tab index
+  const [isNavOpen, setNavOpen] = useState<boolean>(false); // SideNav visibility state
   const router = useRouter();
+  const dark = useTheme();
+
   return (
-    <View style={styles.container}>
-      <View style={styles.tabBar}>
-        {tabs.map((tab) => (
-          <TouchableOpacity
-            key={tab.name}
-            style={styles.tabItem}
-            onPress={() => router.push(tab.path)}
-          >
-            <FontAwesome
-              name={tab.icon as keyof typeof FontAwesome.glyphMap} // This now matches the allowed type
-              size={24}
-              color={tab.path ? "#fff" : "#aaa"}
-            />
-            <Text style={{ color: tab.path ? "#fff" : "#aaa" }}>
-              {tab.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+    <>
+      {isNavOpen && (
+        <SideNav isOpen={isNavOpen} onClose={() => setNavOpen(false)} />
+      )}
+      <View style={[styles.container, { backgroundColor: COLORS.white }]}>
+        <View style={styles.tabBar}>
+          {tabs.map((tab, index) => (
+            <TouchableOpacity
+              key={tab.path}
+              style={styles.tabItem}
+              onPress={() => {
+                if (tab.label === "Menu") {
+                  setNavOpen(true);
+                } else {
+                  setActiveIndex(index); // Set the active index
+                  router.push(tab.path); // Navigate to the tab's path
+                }
+              }}
+            >
+              <FontAwesome
+                name={tab.icon as keyof typeof FontAwesome.glyphMap}
+                size={24}
+                color={
+                  activeIndex === index
+                    ? COLORS.primary // Active tab color
+                    : COLORS.white // Inactive tab color
+                }
+              />
+              <Text
+                style={{
+                  color:
+                    activeIndex === index
+                      ? COLORS.primary // Active tab color
+                      : COLORS.gray3, // Inactive tab color
+                  fontSize: 12,
+                }}
+              >
+                {tab.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
-    backgroundColor: COLORS.primary,
-  },
-  contentContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  contentText: {
-    color: "#fff",
-    fontSize: 20,
   },
   tabBar: {
     flexDirection: "row",

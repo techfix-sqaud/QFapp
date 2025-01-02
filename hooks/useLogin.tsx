@@ -8,7 +8,7 @@ import ValidationContext from "../contexts/ValidationContext";
 const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { userProfile, dispatch } = useContext(AuthContext)!;
+  const { userState, dispatch } = useContext(AuthContext)!;
   const { validationDispatch } = useContext(ValidationContext)!;
 
   const router = useRouter();

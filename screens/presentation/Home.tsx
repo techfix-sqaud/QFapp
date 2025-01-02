@@ -7,7 +7,7 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-virtualized-view";
 import { images, COLORS, SIZES, icons } from "../../constants";
@@ -17,11 +17,36 @@ import { router } from "expo-router";
 import SubHeaderItem from "../../Components/custom/SubHeaderItem";
 import Category from "../../Components/custom/Category";
 import ServiceCard from "../../Components/custom/ServiceCard";
+import AuthContext from "../../contexts/AuthContext";
+import { FontAwesome } from "@expo/vector-icons";
 
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { dark, colors } = useTheme();
+  const { UserState } = useContext(AuthContext)!;
+  const [greeting, setGreeting] = useState<string>("");
 
+  useEffect(() => {
+    function greet() {
+      const currentHour = new Date().getHours();
+
+      switch (true) {
+        case currentHour >= 5 && currentHour < 12:
+          setGreeting("Good morning!");
+          break;
+        case currentHour >= 12 && currentHour < 17:
+          setGreeting("Hello!");
+          break;
+        case currentHour >= 17 && currentHour < 20:
+          setGreeting("Good afternoon!");
+          break;
+        default:
+          setGreeting("Good evening!");
+      }
+    }
+
+    greet();
+  }, []);
   const renderBannerItem = ({
     item,
   }: {
@@ -70,11 +95,15 @@ const Home = () => {
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
           <TouchableOpacity onPress={() => router.push("PersonalProfile")}>
-            <Image
-              source={images.user5}
-              resizeMode="cover"
-              style={styles.avatar}
-            />
+            {UserState.profile !== 0 ? (
+              <Image
+                source={{ uri: UserState.profile }}
+                resizeMode="cover"
+                style={styles.avatar}
+              />
+            ) : (
+              <FontAwesome name="user-circle" size={40} color="#aaa" />
+            )}
           </TouchableOpacity>
           <Text
             style={[
@@ -84,7 +113,7 @@ const Home = () => {
               },
             ]}
           >
-            Hi, Jad!
+            {greeting} {UserState.firstName}
           </Text>
         </View>
         <TouchableOpacity onPress={() => router.push("Notifications")}>
