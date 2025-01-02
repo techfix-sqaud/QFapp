@@ -7,8 +7,8 @@ export interface Tab {
   path: string;
 }
 export const tabs: Tab[] = [
-  { name: "home", label: "Home", icon: "home", path: "/home" },
+  { name: "home", label: "Home", icon: "home", path: "/Dashboard" },
   { name: "profile", label: "profile", icon: "user", path: "/profile" },
   { name: "settings", label: "Settings", icon: "cog", path: "/settings" },
-  { name: "meanu", label: "meanu", icon: "bars", path: "/settings" },
+  { name: "Menu", label: "Menu", icon: "bars", path: "/settings" },
 ];
