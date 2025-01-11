@@ -266,7 +266,7 @@ export default {
     bag,
     bellOutline,
     bell,
-    bookmarkOutline,
+    // bookmarkOutline,
     bookmark,
     calendar,
     calendar2,

@@ -94,8 +94,8 @@ const Home = () => {
     return (
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
-          <TouchableOpacity onPress={() => router.push("PersonalProfile")}>
-            {UserState.profile !== 0 ? (
+          <TouchableOpacity onPress={() => router.push("Users/Profile")}>
+            {UserState.profile !== " " ? (
               <Image
                 source={{ uri: UserState.profile }}
                 resizeMode="cover"
@@ -244,6 +244,7 @@ const Home = () => {
   /**
    * Render Top Services
    */
+
   const renderTopServices = () => {
     const [selectedCategories, setSelectedCategories] = useState(["1"]);
 

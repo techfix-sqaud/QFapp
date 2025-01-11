@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   backIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 16,
+    width: 20,
+    height: 20,
+    marginRight: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: "bold",
     color: COLORS.black,
   },

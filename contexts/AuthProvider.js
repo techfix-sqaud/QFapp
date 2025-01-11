@@ -4,6 +4,7 @@ export const initialState = {
   profile: "",
   firstName: "",
   lastName: "",
+  email: "",
   token: "",
   expires: null,
 };
@@ -18,6 +19,7 @@ export const authReducer = (UserState, action) => {
         profile: action.payload.profile,
         firstName: action.payload.firstName,
         lastName: action.payload.lastName,
+        email: action.payload.email,
         token: action.payload.token,
         expires: action.payload.expires,
       };
@@ -28,6 +30,7 @@ export const authReducer = (UserState, action) => {
         profile: "",
         firstName: "",
         lastName: "",
+        email: "",
         token: "",
         expires: null,
       };

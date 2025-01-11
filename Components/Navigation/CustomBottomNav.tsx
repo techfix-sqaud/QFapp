@@ -1,32 +1,32 @@
-import { useRouter } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { useRouter, usePathname } from "expo-router";
+import React, { useState, useEffect } from "react";
+import { View, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import { COLORS } from "../../constants";
 import { tabs } from "../../Helpers/menusTabsMobile";
 import SideNav from "./MobileNav";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
 
-interface NavItem {
-  label: string;
-  icon: string; // Use the string type for FontAwesome icons
-  path: string;
-}
-
 const CustomBottomNav = () => {
-  const [activeIndex, setActiveIndex] = useState<number>(0); // Track active tab index
-  const [isNavOpen, setNavOpen] = useState<boolean>(false); // SideNav visibility state
+  const [isNavOpen, setNavOpen] = useState<boolean>(false);
   const router = useRouter();
+  const pathname = usePathname(); // Get the current route
   const dark = useTheme();
 
+  const isActive = (path: string) =>
+    pathname === path || (path === "/Dashboard" && pathname === "/");
   return (
     <>
       {isNavOpen && (
         <SideNav isOpen={isNavOpen} onClose={() => setNavOpen(false)} />
       )}
-      <View style={[styles.container, { backgroundColor: COLORS.white }]}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: dark ? COLORS.black : COLORS.white },
+        ]}
+      >
         <View style={styles.tabBar}>
-          {tabs.map((tab, index) => (
+          {tabs.map((tab) => (
             <TouchableOpacity
               key={tab.path}
               style={styles.tabItem}
@@ -34,26 +34,22 @@ const CustomBottomNav = () => {
                 if (tab.label === "Menu") {
                   setNavOpen(true);
                 } else {
-                  setActiveIndex(index); // Set the active index
-                  router.push(tab.path); // Navigate to the tab's path
+                  router.push(tab.path);
+                  setNavOpen(false);
                 }
               }}
             >
-              <FontAwesome
-                name={tab.icon as keyof typeof FontAwesome.glyphMap}
-                size={24}
-                color={
-                  activeIndex === index
-                    ? COLORS.primary // Active tab color
-                    : COLORS.white // Inactive tab color
-                }
+              <Image
+                source={isActive(tab.path) ? tab.icon : tab.notFocused}
+                style={{
+                  width: 24,
+                  height: 24,
+                  tintColor: isActive(tab.path) ? COLORS.primary : COLORS.gray,
+                }}
               />
               <Text
                 style={{
-                  color:
-                    activeIndex === index
-                      ? COLORS.primary // Active tab color
-                      : COLORS.gray3, // Inactive tab color
+                  color: isActive(tab.path) ? COLORS.primary : COLORS.gray,
                   fontSize: 12,
                 }}
               >
