@@ -4,6 +4,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { FontAwesomeIconName } from "../../Helpers/menusTabsMobile";
 import { COLORS } from "../../constants";
+import { useTheme } from "../../Helpers/theme/ThemeProvider";
 
 export interface Tab {
   name: string;
@@ -26,17 +27,28 @@ interface SideNavProps {
 const SideNav: React.FC<SideNavProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
 
+  const dark = useTheme();
+
+  const backGroundStyle = dark ? COLORS.black : COLORS.primary;
+
   if (!isOpen) {
     return null;
   }
 
   return (
     <View style={styles.overlay}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: backGroundStyle,
+          },
+        ]}
+      >
         {tabs.map((tab) => (
           <TouchableOpacity
             key={tab.name}
-            style={styles.navItem}
+            style={[styles.navItem]}
             onPress={() => {
               router.push(tab.path);
               onClose();
@@ -45,13 +57,27 @@ const SideNav: React.FC<SideNavProps> = ({ isOpen, onClose }) => {
             <FontAwesome
               name={tab.icon as keyof typeof FontAwesome.glyphMap}
               size={24}
-              color="#fff"
+              color={dark ? COLORS.primary : COLORS.black}
             />
-            <Text style={styles.navText}>{tab.label}</Text>
+            <Text
+              style={[
+                styles.navText,
+                { color: dark ? COLORS.primary : COLORS.black },
+              ]}
+            >
+              {tab.label}
+            </Text>
           </TouchableOpacity>
         ))}
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Text style={styles.closeButtonText}>Close</Text>
+          <Text
+            style={[
+              styles.closeButtonText,
+              { color: dark ? COLORS.primary : COLORS.black },
+            ]}
+          >
+            Close
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -63,13 +89,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "flex-end",
   },
   container: {
-    width: "80%",
+    width: "100%",
     height: "100%",
-    backgroundColor: COLORS.primary,
     padding: 20,
   },
   navItem: {

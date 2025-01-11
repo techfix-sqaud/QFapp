@@ -37,7 +37,7 @@ const Layout = () => {
   );
 
   const dark = useTheme();
-
+  const statusBarStyle = "light"; //dark ? "light" : "dark";
   const publicRoutes = ["/", "/Account/Login", "/Account/Signup"];
   const path = usePathname();
   const isAnonymous =
@@ -47,7 +47,12 @@ const Layout = () => {
       return (
         <ThemeProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaView style={[styles.mobileSafeArea]}>
+            <SafeAreaView
+              style={[
+                styles.mobileSafeArea,
+                { backgroundColor: dark ? COLORS.black : COLORS.white },
+              ]}
+            >
               <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -58,7 +63,7 @@ const Layout = () => {
                     flex: 1,
                     display: "flex",
                     marginBottom: !isAnonymous ? 0 : 20,
-                    backgroundColor: dark ? COLORS.dark1 : COLORS.white,
+                    backgroundColor: dark ? COLORS.black : COLORS.white,
                   }}
                   contentContainerStyle={{ flexGrow: 1 }}
                 >
