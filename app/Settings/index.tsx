@@ -67,7 +67,7 @@ const Settings = () => {
       <SettingsItem
         icon={icons.bell2}
         name="Notification"
-        onPress={() => router.push("/SettingsNotifications")}
+        onPress={() => router.push("/Settings/Notifications")}
       />
       <SettingsItem
         icon={icons.shieldOutline}
@@ -75,7 +75,7 @@ const Settings = () => {
         onPress={() => router.push("/Settings/Security")}
       />
       <TouchableOpacity
-        onPress={() => router.push("/SettingsLanguage")}
+        onPress={() => router.push("/Settings")}
         style={styles.settingsItemContainer}
       >
         <View style={styles.leftContainer}>
@@ -153,7 +153,7 @@ const Settings = () => {
       <SettingsItem
         icon={icons.infoCircle}
         name="Help Center"
-        onPress={() => router.push("/HelpCenter")}
+        onPress={() => router.push("/Settings/HelpCenter")}
       />
       <SettingsItem
         icon={icons.people4}
