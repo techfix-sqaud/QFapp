@@ -1,11 +1,7 @@
 import React from "react";
-import { View, Text } from "react-native";
+import HelpCenter from "../../../screens/presentation/HelpCenter";
 const index = () => {
-  return (
-    <View>
-      <Text>Help Center</Text>
-    </View>
-  );
+  return <HelpCenter />;
 };
 
 export default index;

@@ -19,11 +19,11 @@ export const tabs: Tab[] = [
   },
 
   {
-    name: "settings",
-    label: "Settings",
-    icon: icons.settings,
-    notFocused: icons.setting2Outline,
-    path: "/Settings",
+    name: "booking",
+    label: "Booking",
+    icon: icons.document2,
+    notFocused: icons.document2Outline,
+    path: "/Booking",
   },
   {
     name: "profile",
@@ -31,6 +31,13 @@ export const tabs: Tab[] = [
     icon: icons.user,
     notFocused: icons.userOutline,
     path: "/Users/Profile",
+  },
+  {
+    name: "settings",
+    label: "Settings",
+    icon: icons.settings,
+    notFocused: icons.setting2Outline,
+    path: "/Settings",
   },
   {
     name: "Menu",
