@@ -5,7 +5,7 @@ import { COLORS, SIZES } from "../../constants";
 
 interface CategoryProps {
   name: string;
-  icon: any;
+  icon: string;
   iconColor: string;
   backgroundColor: string;
 }
@@ -29,12 +29,12 @@ const Category: React.FC<CategoryProps> = ({
         ]}
       >
         <Image
-          source={icon}
+          source={typeof icon === "string" ? { uri: icon } : icon}
           resizeMode="contain"
           style={[
             styles.icon,
             {
-              tintColor: iconColor,
+              tintColor: "#335ef7",
             },
           ]}
         />

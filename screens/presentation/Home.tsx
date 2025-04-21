@@ -19,32 +19,46 @@ import Category from "../../Components/custom/Category";
 import ServiceCard from "../../Components/custom/ServiceCard";
 import AuthContext from "../../contexts/AuthContext";
 import { FontAwesome } from "@expo/vector-icons";
+import { getCategories } from "../../Helpers/API/GeneralAPIs";
 
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { dark, colors } = useTheme();
   const { UserState } = useContext(AuthContext)!;
   const [greeting, setGreeting] = useState<string>("");
+  const [categories, setCategories] = useState<any[]>([]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories();
+      if (response && response.data) {
+        setCategories(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
+
+  function greet() {
+    const currentHour = new Date().getHours();
+
+    switch (true) {
+      case currentHour >= 5 && currentHour < 12:
+        setGreeting("Good morning!");
+        break;
+      case currentHour >= 12 && currentHour < 17:
+        setGreeting("Hello!");
+        break;
+      case currentHour >= 17 && currentHour < 20:
+        setGreeting("Good afternoon!");
+        break;
+      default:
+        setGreeting("Good evening!");
+    }
+  }
 
   useEffect(() => {
-    function greet() {
-      const currentHour = new Date().getHours();
-
-      switch (true) {
-        case currentHour >= 5 && currentHour < 12:
-          setGreeting("Good morning!");
-          break;
-        case currentHour >= 12 && currentHour < 17:
-          setGreeting("Hello!");
-          break;
-        case currentHour >= 17 && currentHour < 20:
-          setGreeting("Good afternoon!");
-          break;
-        default:
-          setGreeting("Good evening!");
-      }
-    }
-
+    fetchCategories();
     greet();
   }, []);
   const renderBannerItem = ({
@@ -95,14 +109,18 @@ const Home = () => {
       <View style={styles.headerContainer}>
         <View style={styles.headerLeft}>
           <TouchableOpacity onPress={() => router.push("Users/Profile")}>
-            {UserState.profile !== " " ? (
+            {UserState.profile ? (
               <Image
                 source={{ uri: UserState.profile }}
                 resizeMode="cover"
                 style={styles.avatar}
               />
             ) : (
-              <FontAwesome name="user-circle" size={40} color="#aaa" />
+              <FontAwesome
+                name="user-circle"
+                size={40}
+                color={dark ? COLORS.primary : COLORS.primary}
+              />
             )}
           </TouchableOpacity>
           <Text
@@ -228,10 +246,10 @@ const Home = () => {
           keyExtractor={(item, index) => index.toString()}
           horizontal={false}
           numColumns={4}
-          renderItem={({ item, index }) => (
+          renderItem={({ item }) => (
             <Category
               name={item.name}
-              icon={item.icon}
+              icon={item.icon_url}
               iconColor={item.iconColor}
               backgroundColor={item.backgroundColor}
             />
@@ -240,7 +258,6 @@ const Home = () => {
       </View>
     );
   };
-
   /**
    * Render Top Services
    */

@@ -1,60 +1,43 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
   SafeAreaView,
+  Image,
   ScrollView,
+  TouchableOpacity,
+  StyleSheet,
 } from "react-native";
+import { COLORS, SIZES } from "../../../constants/theme";
+import Header from "../../../Components/custom/Head";
+import { useTheme } from "../../../Helpers/theme/ThemeProvider";
+import images from "../../../constants/images";
 import { useRouter } from "expo-router";
-import { COLORS, SIZES } from "../../constants/theme";
-import Input from "../../Components/custom/Input";
-import OrSeparator from "../../Components/custom/OrSeparator";
-import SocialButton from "../../Components/custom/SocialButton";
-import { images, icons } from "../../constants";
-import Button from "../../Components/custom/Button";
-import { useTheme } from "../../Helpers/theme/ThemeProvider";
-import Header from "../../Components/custom/Head";
-import ValidationContext from "../../contexts/ValidationContext";
-import useLogin from "../../hooks/useLogin";
-const Login = () => {
+import useLogin from "../../../hooks/useLogin";
+import Input from "../../../Components/custom/Input";
+import icons from "../../../constants/icons";
+import Button from "../../../Components/custom/Button";
+import OrSeparator from "../../../Components/custom/OrSeparator";
+
+const index = () => {
   const router = useRouter();
-  const { setUserId } = useContext(ValidationContext)!;
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [errorRequiredFields, setErrorRequiredFields] = useState<string[]>([
     "",
   ]);
-  const [checked, setChecked] = useState<boolean>(false);
   const { colors, dark, setScheme } = useTheme();
-  const { requestLogin } = useLogin();
+  const { requestLoginAsGuest } = useLogin();
 
-  const handleLogin = async (e: any) => {
+  const handleContinueAsGuest = async (e: any) => {
     e.preventDefault();
-    if (!email || !password) {
+    if (!email || !firstName || !lastName) {
       setErrorRequiredFields(["Please fill in all required fields."]);
       return;
     }
-    requestLogin(email, password, setErrorMessage);
+    requestLoginAsGuest(firstName, lastName, email);
   };
-
-  const appleAuthHandler = () => {
-    console.log("Apple Authentication");
-  };
-
-  const facebookAuthHandler = () => {
-    console.log("Facebook Authentication");
-  };
-
-  const googleAuthHandler = () => {
-    console.log("Google Authentication");
-  };
-
   return (
     <SafeAreaView
       style={[
@@ -72,9 +55,7 @@ const Login = () => {
           },
         ]}
       >
-        {/* <Card style={styles.card}> */}
-
-        <Header title="Login" />
+        <Header title="Guest Login" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.logoContainer}>
             <Image
@@ -83,7 +64,34 @@ const Login = () => {
               style={styles.logo}
             />
           </View>
-          {errorMessage && <Text>{errorMessage}</Text>}
+          {errorRequiredFields && (
+            <Text style={{ color: COLORS.error }}>{errorRequiredFields}</Text>
+          )}
+          <Input
+            id="firstName"
+            onInputChanged={(id, value) => {
+              setFirstName(value);
+            }}
+            autoCapitalize="none"
+            placeholder="First Name"
+            placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
+            icon={icons.user}
+            keyboardType={"default"}
+            textContentType="firstName"
+          />
+          <Input
+            id="lastName"
+            onInputChanged={(id, value) => {
+              setLastName(value);
+            }}
+            autoCapitalize="none"
+            placeholder="Last Name"
+            placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
+            icon={icons.user}
+            keyboardType={"default"}
+            textContentType="lastName"
+          />
+
           <Input
             id="email"
             onInputChanged={(id, value) => {
@@ -96,63 +104,12 @@ const Login = () => {
             keyboardType={"default"}
             textContentType="emailAddress"
           />
-          <Input
-            onInputChanged={(id, value) => setPassword(value)}
-            errorText={
-              errorRequiredFields.length > 0 ? errorRequiredFields : []
-            }
-            autoCapitalize="none"
-            id="password"
-            placeholder="Password"
-            placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-            icon={icons.padlock}
-            secureTextEntry={!showPassword}
-            textContentType="password"
-          />
           <Button
             filled={true}
-            title="Login"
-            onPress={(e: any) => handleLogin(e)}
+            title="Continue as Guest"
+            onPress={(e: any) => handleContinueAsGuest(e)}
             style={styles.button}
-          >
-            Login
-          </Button>
-
-          <View>
-            <View>
-              <TouchableOpacity
-                onPress={() => router.push("Account/ForgotPassword")}
-              >
-                <Text style={styles.forgotPasswordBtnText}>
-                  Forgot the password?
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <OrSeparator text="or continue with" />
-
-            <View style={styles.socialBtnContainer}>
-              <SocialButton
-                icon={icons.appleLogo}
-                onPress={appleAuthHandler}
-                tintColor={dark ? COLORS.white : COLORS.black}
-              />
-              <SocialButton
-                icon={icons.facebook}
-                onPress={facebookAuthHandler}
-              />
-              <SocialButton icon={icons.google} onPress={googleAuthHandler} />
-            </View>
-            <OrSeparator text="" />
-            <View style={styles.CountineAsGuest}>
-              <TouchableOpacity
-                onPress={() => {
-                  router.push("/Account/GuestLogin");
-                }}
-              >
-                <Text style={styles.bottomRight}>Continue as Guest</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          />
         </ScrollView>
         <View style={styles.bottomContainer}>
           <Text
@@ -163,21 +120,20 @@ const Login = () => {
               },
             ]}
           >
-            Don't have an account ?
+            have an account ?
           </Text>
           <TouchableOpacity
             onPress={() => {
-              router.push("/Account/signup");
+              router.push("/Account/Login");
             }}
           >
-            <Text style={styles.bottomRight}>Sign Up</Text>
+            <Text style={styles.bottomRight}>Login</Text>
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   area: {
     flex: 1,
@@ -288,5 +244,4 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 });
-
-export default Login;
+export default index;
