@@ -168,6 +168,7 @@ const EditProfile = () => {
                   marginBottom: 20,
                 }}
               />
+              <Text>Edit profile</Text>
             </View>
           </View>
         </TouchableWithoutFeedback>

@@ -1,17 +1,42 @@
 import { useContext, useState } from "react";
 import { Alert } from "react-native";
-import quickFixAPI, { configartion } from "../Helpers/Axios";
+import quickFixAPI, { configartion, resetConfigartion } from "../Helpers/Axios";
 import AuthContext from "../contexts/AuthContext";
 import { useRouter } from "expo-router";
 import ValidationContext from "../contexts/ValidationContext";
+import { UserRole } from "../Helpers/Enums";
 
 const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { userState, dispatch } = useContext(AuthContext)!;
+  const { UserState, dispatch } = useContext(AuthContext)!;
   const { validationDispatch } = useContext(ValidationContext)!;
 
   const router = useRouter();
+  const requestLoginAsGuest = async (
+    firstName: string,
+    lastName: string,
+    email: string
+  ) => {
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 2);
+
+    dispatch({
+      type: "LOGIN",
+      payload: {
+        isAuthenticated: true,
+        userId: 0,
+        role: UserRole.Guest,
+        profile: "",
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        token: "",
+        expires: expires,
+      },
+    });
+    router.push("/Dashboard");
+  };
   const HandleLogin = async (
     token: string,
     expires: Date,
@@ -93,7 +118,29 @@ const useLogin = () => {
       );
     }
   };
-  return { HandleLogin, loading, error, Validate, requestLogin };
+
+  const handleLogout = () => {
+    if (UserState.role == UserRole.Guest) dispatch({ type: "LOGOUT" });
+    else {
+      resetConfigartion();
+      try {
+        quickFixAPI.get("/Account/logout");
+      } catch (error) {
+        console.error("Logout failed", error);
+      }
+      dispatch({ type: "LOGOUT" });
+    }
+    router.push("/Account/Login");
+  };
+  return {
+    HandleLogin,
+    loading,
+    error,
+    Validate,
+    requestLogin,
+    requestLoginAsGuest,
+    handleLogout,
+  };
 };
 
 export default useLogin;

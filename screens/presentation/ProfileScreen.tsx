@@ -28,6 +28,7 @@ import { useRouter } from "expo-router";
 import Button from "../../Components/custom/Button";
 import AuthContext from "../../contexts/AuthContext";
 import Header from "../../Components/custom/Head";
+import useLogin from "../../hooks/useLogin";
 
 interface RBSheetRef {
   open: () => void;
@@ -38,7 +39,7 @@ const ProfileScreen = () => {
   const refRBSheet = useRef<RBSheetRef>(null);
   const { dark, colors, setScheme } = useTheme();
   const { UserState } = useContext(AuthContext)!;
-
+  const { handleLogout } = useLogin();
   const router = useRouter();
 
   const [image, setImage] = useState<ImageSourcePropType>(images.user1);
@@ -229,7 +230,10 @@ const ProfileScreen = () => {
             title="Yes, Logout"
             filled
             style={styles.logoutButton}
-            onPress={() => refRBSheet?.current?.close()}
+            onPress={() => {
+              refRBSheet?.current?.close();
+              handleLogout();
+            }}
           />
         </View>
       </RBSheet>
