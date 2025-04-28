@@ -6,78 +6,76 @@ import {
   Alert,
   Image,
   TouchableOpacity,
-  Modal,
-  TouchableWithoutFeedback,
-  FlatList,
-  TextInput,
   ImageSourcePropType,
-  SafeAreaView,
 } from "react-native";
-import React, {
-  FC,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
-import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
-import { useTheme } from "react-native-paper";
+import React, { useContext, useEffect, useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "../../Helpers/theme/ThemeProvider";
 import Input from "../../Components/custom/Input";
-import { SIZES, COLORS, images, FONTS, icons } from "../../constants";
+import { SIZES, COLORS, images, icons } from "../../constants";
 import { useRouter } from "expo-router";
 import Button from "../../Components/custom/Button";
 import Header from "../../Components/custom/Head";
+import { getUserData } from "../../Helpers/API/usersAPIs";
+import AuthContext from "../../contexts/AuthContext";
+import { UserProfile } from "../../interfaces/users";
+import { UserRole } from "../../Helpers/Enums";
+import helperMethods from "../../Helpers/helperMethods";
+import LoadingOverlay from "../../Components/custom/loadingOverlay";
 const isTestMode = true;
 
 const EditProfile = () => {
+  const { UserState } = useContext(AuthContext)!;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [image, setImage] = useState<ImageSourcePropType | null>(null);
   const [error, setError] = useState<any>(null);
-  const [areas, setAreas] = useState<any[]>([]);
-  const [selectedArea, setSelectedArea] = useState<any>(null);
-  const [email, setEmail] = useState<string>("");
-  const [firstName, setFirstName] = useState<string>("");
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [openStartDatePicker, setOpenStartDatePicker] =
-    useState<boolean>(false);
-  const [selectedGender, setSelectedGender] = useState<string>("");
+  const [userProfile, setUserProfile] = useState<UserProfile>();
+
   const { colors, dark } = useTheme();
   const router = useRouter();
-  const genderOptions: { label: string; value: string }[] = [
-    { label: "Male", value: "male" },
-    { label: "Female", value: "female" },
-    { label: "Other", value: "other" },
-  ];
 
-  const handleGenderChange = (value: string) => {
-    setSelectedGender(value);
-  };
-
-  const today = new Date();
-  const startDate = `${today.getDate()}/${today.getMonth()}/${today.getFullYear()}`;
-  //   const startDate: string = getFormatedDate(
-  //     new Date(today.setDate(today.getDate() + 1)),
-  //     "YYYY/MM/DD"
-  //   );
-
-  const [startedDate, setStartedDate] = useState<string>("12/12/2023");
-  const handleOnPressStartDate = (): void => {
-    setOpenStartDatePicker(!openStartDatePicker);
-  };
-
-  //   const inputChangedHandler = useCallback(
-  //     (inputId: string, inputValue: string): void => {
-  //       const result: boolean = validateInput(inputId, inputValue);
-  //       dispatchFormState({ inputId, validationResult: result, inputValue });
-  //     },
-  //     [dispatchFormState]
-  //   );
+  const [formData, setFormData] = useState<UserProfile>({
+    firstName: "",
+    lastName: "",
+    userName: "",
+    phoneNumber: "",
+    email: "",
+    ssn: "",
+    profile: "",
+  });
 
   useEffect((): void => {
     if (error) {
       Alert.alert("An error occured", error);
     }
   }, [error]);
+
+  const handleInputChange = (field: keyof UserProfile, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  useEffect((): void => {
+    getUserData()
+      .then((response: any) => {
+        if (!response) {
+          console.warn("No user data returned");
+          return;
+        }
+        setUserProfile(response);
+      })
+      .catch((error: any) => {
+        console.log("Error fetching user data", error);
+      });
+  }, [UserState]);
+
+  useEffect(() => {
+    if (userProfile) {
+      setFormData(userProfile);
+    }
+  }, [userProfile]);
 
   const pickImage = async (): Promise<void> => {
     // try {
@@ -87,109 +85,36 @@ const EditProfile = () => {
     //   setImage({ uri: tempUri });
     // } catch (error) {}
   };
+  const updateUser = async () => {
+    try {
+      setIsLoading(true);
 
-  // fectch codes from rescountries api
-  useEffect(() => {
-    fetch("https://restcountries.com/v2/all")
-      .then((response: Response) => response.json())
-      .then((data) => {
-        let areaData = data.map((item: any) => {
-          return {
-            code: item.alpha2Code,
-            item: item.name,
-            callingCode: `+${item.callingCodes[0]}`,
-            flag: `https://flagsapi.com/${item.alpha2Code}/flat/64.png`,
-          };
-        });
-
-        setAreas(areaData);
-        if (areaData.length > 0) {
-          let defaultData = areaData.filter((a: any) => a.code == "US");
-
-          if (defaultData.length > 0) {
-            setSelectedArea(defaultData[0]);
-          }
-        }
-      });
-  }, []);
-
-  // render countries codes modal
-  function RenderAreasCodesModal() {
-    const renderItem = ({ item }: any): ReactElement => {
-      return (
-        <TouchableOpacity
-          style={{
-            padding: 10,
-            flexDirection: "row",
-          }}
-          onPress={() => {
-            setSelectedArea(item);
-            setModalVisible(false);
-          }}
-        >
-          <Image
-            source={{ uri: item.flag }}
-            style={{
-              height: 30,
-              width: 30,
-              marginRight: 10,
-              resizeMode: "contain",
-            }}
-          />
-          <Text style={{ fontSize: 16, color: "#fff" }}>{item.item}</Text>
-        </TouchableOpacity>
-      );
-    };
-    return (
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
-        <TouchableWithoutFeedback onPress={(): void => setModalVisible(false)}>
-          <View
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 400,
-                width: SIZES.width * 0.8,
-                backgroundColor: COLORS.primary,
-                borderRadius: 12,
-              }}
-            >
-              <FlatList
-                data={areas}
-                renderItem={renderItem}
-                horizontal={false}
-                keyExtractor={(item: { code: string }) => item.code}
-                style={{
-                  padding: 20,
-                  marginBottom: 20,
-                }}
-              />
-              <Text>Edit profile</Text>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    );
-  }
+      // Temporary timer to test the loading overlay
+      setTimeout(() => {
+        Alert.alert("Success", "Profile updated successfully!");
+        setIsLoading(false);
+      }, 2000); // Simulate a 2-second delay
+    } catch (error) {
+      Alert.alert("Error", "Failed to update profile.");
+      console.error("Update error", error);
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <View style={[{ backgroundColor: "red" }]}>
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: dark ? COLORS.black : COLORS.white },
-        ]}
-      >
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        {isLoading && <LoadingOverlay visible={isLoading} message="Updating" />}
         <Header title="Edit Profile" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ alignItems: "center", marginVertical: 12 }}>
             <View style={styles.avatarContainer}>
               <Image
-                source={image === null ? images.user1 : image}
+                source={
+                  userProfile?.profile === null
+                    ? images.user1
+                    : { uri: userProfile?.profile }
+                }
                 resizeMode="cover"
                 style={styles.avatar}
               />
@@ -204,178 +129,113 @@ const EditProfile = () => {
           </View>
           <View>
             <Input
-              id="email"
-              onInputChanged={(id, value) => {
-                setFirstName(value);
-              }}
+              id="firstName"
+              onInputChanged={(id, value) =>
+                handleInputChange("firstName", value)
+              }
+              editable={false}
+              label="First Name"
               autoCapitalize="none"
-              placeholder="Email"
+              placeholder="First Name"
               placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-              icon={icons.email}
+              icon={icons.user}
               keyboardType={"default"}
-              textContentType="emailAddress"
+              textContentType="firstName"
+              value={formData?.firstName}
             />
-
+            <Input
+              id="lastName"
+              onInputChanged={(id, value) =>
+                handleInputChange("lastName", value)
+              }
+              label="Last Name"
+              editable={false}
+              autoCapitalize="none"
+              placeholder="Last Name"
+              placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
+              icon={icons.user}
+              keyboardType={"default"}
+              textContentType="lastName"
+              value={formData?.lastName}
+            />
+            <Input
+              id="UserName"
+              onInputChanged={(id, value) =>
+                handleInputChange("userName", value)
+              }
+              label="UserName"
+              autoCapitalize="none"
+              placeholder="UserName"
+              placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
+              icon={icons.userDefault}
+              keyboardType={"default"}
+              textContentType="userName"
+              value={formData?.userName}
+            />
             <Input
               id="email"
-              onInputChanged={(id, value) => {
-                setEmail(value);
-              }}
+              onInputChanged={(id, value) => handleInputChange("email", value)}
               autoCapitalize="none"
+              label="Email"
               placeholder="Email"
               placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
               icon={icons.email}
               keyboardType={"default"}
+              value={formData?.email}
               textContentType="emailAddress"
             />
-
-            <View
+            <Input
+              id="phoneNumber"
+              onInputChanged={(id, value) =>
+                handleInputChange("phoneNumber", value)
+              }
+              label="Phone Number"
+              style={{ color: dark ? COLORS.white : COLORS.greyscale500 }}
+              placeholder="Enter your phone number"
+              placeholderTextColor={dark ? COLORS.white : COLORS.greyscale500}
+              selectionColor={dark ? COLORS.white : COLORS.greyscale500}
+              keyboardType="numeric"
+              value={formData?.phoneNumber}
+            />
+            {UserState.role == UserRole.Freelancer && (
+              <Input
+                id="SSN"
+                onInputChanged={(id, value) => {
+                  console.log(`Input changed: ${id} = ${value}`);
+                }}
+                label="SSN"
+                style={{ color: dark ? COLORS.white : COLORS.greyscale500 }}
+                placeholder="last 4 digits of your SSN"
+                placeholderTextColor={dark ? COLORS.white : COLORS.greyscale500}
+                selectionColor={dark ? COLORS.white : COLORS.greyscale500}
+                keyboardType="numeric"
+                value={
+                  formData?.ssn ? helperMethods.maskSSN(formData?.ssn) : ""
+                }
+              />
+            )}
+            <Text
               style={{
-                width: SIZES.width - 32,
+                color: dark ? COLORS.white : COLORS.primary,
+                fontSize: 16,
               }}
             >
-              <TouchableOpacity
-                style={[
-                  styles.inputBtn,
-                  {
-                    backgroundColor: dark ? COLORS.dark2 : COLORS.greyscale500,
-                    borderColor: dark ? COLORS.dark2 : COLORS.greyscale500,
-                  },
-                ]}
-                onPress={handleOnPressStartDate}
-              >
-                <Text
-                  style={{
-                    ...FONTS.body4,
-                    color: COLORS.grayscale400,
-                  }}
-                >
-                  {startedDate}
-                </Text>
-                <Feather
-                  name="calendar"
-                  size={24}
-                  color={COLORS.grayscale400}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={[
-                styles.inputContainer,
-                {
-                  backgroundColor: dark ? COLORS.dark2 : COLORS.greyscale500,
-                  borderColor: dark ? COLORS.dark2 : COLORS.greyscale500,
-                },
-              ]}
-            >
-              <TouchableOpacity
-                style={styles.selectFlagContainer}
-                onPress={(): void => setModalVisible(true)}
-              >
-                <View style={{ justifyContent: "center" }}>
-                  <Image
-                    source={icons.arrowDown}
-                    resizeMode="contain"
-                    style={styles.downIcon}
-                  />
-                </View>
-                <View
-                  style={{
-                    justifyContent: "center",
-                    marginLeft: 5,
-                  }}
-                >
-                  <Image
-                    source={{ uri: selectedArea?.flag }}
-                    style={[styles.flagIcon, { resizeMode: "contain" }]}
-                  />
-                </View>
-                <View
-                  style={{
-                    justifyContent: "center",
-                    marginLeft: 5,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: dark ? COLORS.white : "#111",
-                      fontSize: 12,
-                    }}
-                  >
-                    {selectedArea?.callingCode}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              {/* Phone Number Text Input */}
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your phone number"
-                placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-                selectionColor="#111"
-                keyboardType="numeric"
-              />
-            </View>
-            <View>
-              {/* <RNPickerSelect
-                placeholder={{ label: "Select", value: "" }}
-                items={genderOptions}
-                onValueChange={(value) => handleGenderChange(value)}
-                value={selectedGender}
-                style={{
-                  inputIOS: {
-                    fontSize: 16,
-                    paddingHorizontal: 10,
-                    // borderRadius: 4,
-                    color: COLORS.greyscale600,
-                    paddingRight: 30,
-                    height: 52,
-                    width: SIZES.width - 32,
-                    alignItems: "center",
-                    backgroundColor: dark ? COLORS.dark2 : COLORS.greyscale500,
-                    borderRadius: 16,
-                  },
-                  inputAndroid: {
-                    fontSize: 16,
-                    paddingHorizontal: 10,
-                    // borderRadius: 8,
-                    color: COLORS.greyscale600,
-                    paddingRight: 30,
-                    height: 52,
-                    width: SIZES.width - 32,
-                    alignItems: "center",
-                    backgroundColor: dark ? COLORS.dark2 : COLORS.greyscale500,
-                    borderRadius: 16,
-                  },
-                }}
-              /> */}
-            </View>
-            {/* <Input
-              id="occupation"
-              onInputChanged={inputChangedHandler}
-              errorText={formState.inputValidities["occupation"]}
-              placeholder="Occupation"
-              placeholderTextColor={
-                dark ? String(COLORS.grayTie) : String(COLORS.black)
-              }
-            /> */}
+              Last Login:{" "}
+              {userProfile?.last_login
+                ? new Date(userProfile.last_login).toLocaleDateString()
+                : "N/A"}
+            </Text>
           </View>
         </ScrollView>
       </View>
-      {/* <DatePickerModal
-      open={openStartDatePicker}
-      startDate={startDate}
-      selectedDate={startedDate}
-      onClose={(): void => setOpenStartDatePicker(false)}
-      onChangeStartDate={(date: string) => setStartedDate(date)}
-    /> */}
-      {RenderAreasCodesModal()}
+      {/* {RenderAreasCodesModal()} */}
       <View style={styles.bottomContainer}>
         <Button
           title="Update"
           filled
           style={styles.continueButton}
           onPress={(): void => {
-            router.push("/Dashboard");
+            updateUser();
           }}
         />
       </View>
@@ -417,15 +277,15 @@ const styles = StyleSheet.create({
     right: 0,
   },
   inputContainer: {
+    width: "100%",
+    paddingHorizontal: SIZES.padding,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginVertical: 5,
     flexDirection: "row",
-    borderColor: COLORS.greyscale500,
-    borderWidth: 0.4,
-    borderRadius: 6,
     height: 52,
-    width: SIZES.width - 32,
     alignItems: "center",
-    marginVertical: 16,
-    backgroundColor: COLORS.greyscale500,
+    position: "relative",
   },
   downIcon: {
     width: 10,
@@ -447,7 +307,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     height: 40,
     fontSize: 14,
-    color: "#111",
   },
   inputBtn: {
     borderWidth: 1,

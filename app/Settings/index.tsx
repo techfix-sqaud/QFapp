@@ -6,6 +6,7 @@ import {
   Image,
   Switch,
   ImageSourcePropType,
+  Platform,
 } from "react-native";
 import React, {
   useState,
@@ -20,7 +21,7 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-virtualized-view";
 import images from "../../constants/images";
 import { COLORS, icons, SIZES } from "../../constants";
-//import { launchImagePicker } from "../../Helpers/ImagePickerHelper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import SettingsItem from "../../Components/custom/SettingsItem";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
@@ -57,9 +58,20 @@ const Settings = () => {
     // }
   };
 
-  const toggleDarkMode = (): void => {
-    setIsDarkMode((prev: boolean): boolean => !prev);
-    dark ? setScheme("light") : setScheme("dark");
+  const toggleDarkMode = async (): Promise<void> => {
+    try {
+      const newMode = !isDarkMode;
+      setIsDarkMode(newMode);
+      dark ? setScheme("light") : setScheme("dark");
+
+      if (Platform.OS === "web") {
+        localStorage.setItem("theme", newMode ? "dark" : "light");
+      } else {
+        await AsyncStorage.setItem("theme", newMode ? "dark" : "light");
+      }
+    } catch (error) {
+      console.error("Error saving theme preference: ", error);
+    }
   };
 
   const renderSettings = (): ReactElement => (

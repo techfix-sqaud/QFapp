@@ -1,23 +1,33 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  Animated,
+} from "react-native";
 import { COLORS, SIZES } from "../../constants/theme";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
 
 interface InputProps {
   id: string;
   icon?: any;
+  label?: string;
+  editable?: boolean;
   placeholder?: string;
   placeholderTextColor?: string;
   errorText?: string[];
   onInputChanged: (id: string, text: string) => void;
   onChangeText?: (text: string) => void;
+  value?: string;
   [key: string]: any;
 }
 
 const Input = (props: InputProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const { dark } = useTheme();
-
+  const disabled = props.editable !== false;
   const handleFocus = () => {
     setIsFocused(true);
   };
@@ -33,18 +43,30 @@ const Input = (props: InputProps) => {
     props.onInputChanged(props.id, text);
   };
 
+  const labelStyle = {
+    top: -10,
+    fontSize: 12,
+    zIndex: 10,
+    color: dark ? COLORS.white : COLORS.primary,
+    backgroundColor: dark ? "transparent" : COLORS.white,
+  };
+
   return (
     <View style={[styles.container]}>
       <View
         style={[
           styles.inputContainer,
           {
-            borderColor: isFocused
+            borderColor: !disabled
+              ? COLORS.gray3
+              : isFocused
               ? COLORS.primary
               : dark
               ? COLORS.dark2
               : COLORS.greyscale500,
-            backgroundColor: isFocused
+            backgroundColor: !disabled
+              ? COLORS.gray3
+              : isFocused
               ? COLORS.tansparentPrimary
               : dark
               ? COLORS.dark2
@@ -63,13 +85,21 @@ const Input = (props: InputProps) => {
             ]}
           />
         )}
+        <Animated.Text style={[styles.label, labelStyle]}>
+          {props.label}
+        </Animated.Text>
         <TextInput
           {...props}
+          editable={disabled}
           onChangeText={handleChangeText}
           onFocus={handleFocus}
           onBlur={handleBlur}
           keyboardType={"default"}
-          style={[styles.input, { color: dark ? COLORS.white : COLORS.black }]}
+          style={[
+            styles.input,
+            { color: dark ? COLORS.white : COLORS.black },
+            !disabled ? styles.disabledInput : styles.input,
+          ]}
           placeholder={props.placeholder}
           placeholderTextColor={props.placeholderTextColor}
           autoCapitalize="none"
@@ -91,13 +121,13 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "100%",
     paddingHorizontal: SIZES.padding,
-    paddingVertical: SIZES.padding2,
     borderRadius: 12,
     borderWidth: 1,
     marginVertical: 5,
     flexDirection: "row",
     height: 52,
     alignItems: "center",
+    position: "relative",
   },
   icon: {
     marginRight: 10,
@@ -105,12 +135,18 @@ const styles = StyleSheet.create({
     width: 20,
     tintColor: "#BCBCBC",
   },
+  label: {
+    position: "absolute",
+    left: SIZES.padding,
+    backgroundColor: "transparent",
+    paddingHorizontal: 4,
+  },
   input: {
-    color: COLORS.black,
     flex: 1,
     fontFamily: "regular",
     fontSize: 14,
     paddingTop: 0,
+    paddingBottom: 0,
   },
   errorContainer: {
     marginVertical: 4,
@@ -118,6 +154,9 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 12,
+  },
+  disabledInput: {
+    backgroundColor: COLORS.gray3,
   },
 });
 

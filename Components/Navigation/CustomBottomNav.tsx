@@ -10,7 +10,7 @@ const CustomBottomNav = () => {
   const [isNavOpen, setNavOpen] = useState<boolean>(false);
   const router = useRouter();
   const pathname = usePathname(); // Get the current route
-  const dark = useTheme();
+  const { colors, dark } = useTheme();
 
   const isActive = (path: string) =>
     pathname === path || (path === "/Dashboard" && pathname === "/");
@@ -19,12 +19,7 @@ const CustomBottomNav = () => {
       {isNavOpen && (
         <SideNav isOpen={isNavOpen} onClose={() => setNavOpen(false)} />
       )}
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: dark ? COLORS.black : COLORS.white },
-        ]}
-      >
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.tabBar}>
           {tabs.map((tab) => (
             <TouchableOpacity

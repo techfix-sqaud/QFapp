@@ -29,6 +29,7 @@ import Button from "../../Components/custom/Button";
 import AuthContext from "../../contexts/AuthContext";
 import Header from "../../Components/custom/Head";
 import useLogin from "../../hooks/useLogin";
+import { UserRole, UserRoleIds } from "../../Helpers/Enums";
 
 interface RBSheetRef {
   open: () => void;
@@ -57,12 +58,6 @@ const ProfileScreen = () => {
     //   console.error("Error picking image: ", error);
     // }
   };
-
-  const toggleDarkMode = (): void => {
-    setIsDarkMode((prev: boolean): boolean => !prev);
-    dark ? setScheme("light") : setScheme("dark");
-  };
-
   const renderHeader = (): ReactElement => {
     return (
       <TouchableOpacity style={styles.headerContainer}>
@@ -94,7 +89,10 @@ const ProfileScreen = () => {
           <Image
             source={icons.settings}
             resizeMode="contain"
-            style={[styles.headerIcon]}
+            style={[
+              styles.headerIcon,
+              { tintColor: dark ? COLORS.white : COLORS.primary },
+            ]}
           />
         </TouchableOpacity>
       </TouchableOpacity>
@@ -103,18 +101,20 @@ const ProfileScreen = () => {
   const renderProfile = (): ReactElement => (
     <View style={styles.profileContainer}>
       <View>
-        {UserState.profile !== " " ? (
+        {UserState.profile !== "" ? (
           <Image
             source={{ uri: UserState.profile }}
             resizeMode="cover"
             style={styles.avatar}
           />
         ) : (
-          <FontAwesome name="user-circle" size={40} color="#aaa" />
+          <FontAwesome name="user-circle" size={80} color="#4034ef" />
         )}
-        <TouchableOpacity onPress={pickImage} style={styles.picContainer}>
-          <MaterialIcons name="edit" size={16} color={COLORS.white} />
-        </TouchableOpacity>
+        {UserState.role !== UserRole.Guest && (
+          <TouchableOpacity onPress={pickImage} style={styles.picContainer}>
+            <MaterialIcons name="edit" size={16} color={COLORS.white} />
+          </TouchableOpacity>
+        )}
       </View>
       <Text
         style={[
@@ -142,11 +142,19 @@ const ProfileScreen = () => {
         name="My Booking"
         onPress={() => router.push("/MyBookings")}
       />
-      <SettingsItem
-        icon={icons.userOutline}
-        name="Edit Profile"
-        onPress={() => router.push("/Users/EditProfile")}
-      />
+      {UserState.role !== UserRole.Guest ? (
+        <SettingsItem
+          icon={icons.userOutline}
+          name="Edit Profile"
+          onPress={() => router.push("/Users/EditProfile")}
+        />
+      ) : (
+        <SettingsItem
+          icon={icons.userOutline}
+          name="Sign up"
+          onPress={() => router.push("/Account/signup")}
+        />
+      )}
 
       <SettingsItem
         icon={icons.wallet2Outline}

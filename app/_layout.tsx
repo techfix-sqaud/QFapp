@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from "react";
+import React, { useReducer } from "react";
 import {
   ScrollView,
   KeyboardAvoidingView,
@@ -7,17 +7,12 @@ import {
   View,
   StyleSheet,
   StatusBar as MobileStatusBar,
-  Button,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Head } from "expo-head";
 import { StatusBar } from "expo-status-bar";
 import { Slot, usePathname } from "expo-router";
-import {
-  //ThemeContext,
-  ThemeProvider,
-  useTheme,
-} from "../Helpers/theme/ThemeProvider";
+import { ThemeProvider, useTheme } from "../Helpers/theme/ThemeProvider";
 import WebNavigation from "../Components/Navigation/WebNavigation";
 import AuthContext from "../contexts/AuthContext";
 import { authReducer, initialState } from "../contexts/AuthProvider";
@@ -36,49 +31,57 @@ const Layout = () => {
     initialValidationState
   );
 
-  const dark = useTheme();
-  const statusBarStyle = "light"; //dark ? "light" : "dark";
-  const publicRoutes = ["/", "/Account/Login", "/Account/Signup"];
+  return (
+    <ThemeProvider>
+      <ValidationContext.Provider value={{ userId, validationDispatch }}>
+        <AuthContext.Provider value={{ UserState, dispatch }}>
+          <InnerLayout />
+        </AuthContext.Provider>
+      </ValidationContext.Provider>
+    </ThemeProvider>
+  );
+};
+
+const InnerLayout = () => {
+  const { colors, dark } = useTheme();
   const path = usePathname();
+  const { UserState } = React.useContext(AuthContext);
+  const publicRoutes = ["/", "/Account/Login", "/Account/Signup"];
   const isAnonymous =
     path === "/" || publicRoutes.includes(path.split("/")[1]?.toLowerCase());
+
   const renderContent = () => {
     if (Platform.OS !== "web") {
       return (
-        <ThemeProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaView
-              style={[
-                styles.mobileSafeArea,
-                { backgroundColor: dark ? COLORS.black : COLORS.white },
-              ]}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaView
+            style={[
+              styles.mobileSafeArea,
+              { backgroundColor: dark ? COLORS.dark1 : COLORS.white },
+            ]}
+          >
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-              <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              <ScrollView
+                automaticallyAdjustKeyboardInsets
+                style={{
+                  flex: 1,
+                  marginBottom: !isAnonymous ? 0 : 20,
+                  backgroundColor: colors.background,
+                }}
+                contentContainerStyle={{ flexGrow: 1 }}
               >
-                <ScrollView
-                  automaticallyAdjustKeyboardInsets
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    marginBottom: !isAnonymous ? 0 : 20,
-                    backgroundColor: dark ? COLORS.black : COLORS.white,
-                  }}
-                  contentContainerStyle={{ flexGrow: 1 }}
-                >
-                  <Slot />
-                </ScrollView>
-                {!isAnonymous && UserState.isAuthenticated && <BottomNav />}
-              </KeyboardAvoidingView>
-            </SafeAreaView>
-          </GestureHandlerRootView>
-        </ThemeProvider>
+                <Slot />
+              </ScrollView>
+              {!isAnonymous && UserState?.isAuthenticated && <BottomNav />}
+            </KeyboardAvoidingView>
+          </SafeAreaView>
+        </GestureHandlerRootView>
       );
-    } else if (isAnonymous) {
-      return <Slot screenOptions={{ title: "quickFix" }} />;
     } else {
-      return <Slot screenOptions={{ title: "quickFix" }} />; //<WebNavigation />;
+      return <Slot screenOptions={{ title: "quickFix" }} />;
     }
   };
 
@@ -86,22 +89,11 @@ const Layout = () => {
     <>
       {Platform.OS === "web" && (
         <Head>
-          <style>
-            {/* {`
-              body {
-                background-color: #081c4b;
-              }
-            `} */}
-          </style>
+          <style>{/* Add any head styles if needed */}</style>
         </Head>
       )}
-
-      <ValidationContext.Provider value={{ userId, validationDispatch }}>
-        <AuthContext.Provider value={{ UserState, dispatch }}>
-          {renderContent()}
-          <StatusBar style="auto" />
-        </AuthContext.Provider>
-      </ValidationContext.Provider>
+      {renderContent()}
+      <StatusBar style={dark ? "light" : "dark"} />
     </>
   );
 };
@@ -112,4 +104,5 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "android" ? MobileStatusBar.currentHeight : 0,
   },
 });
+
 export default Layout;

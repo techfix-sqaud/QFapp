@@ -19,6 +19,7 @@ import { useTheme } from "../../Helpers/theme/ThemeProvider";
 import Header from "../../Components/custom/Head";
 import ValidationContext from "../../contexts/ValidationContext";
 import useLogin from "../../hooks/useLogin";
+import LoadingOverlay from "../../Components/custom/loadingOverlay";
 const Login = () => {
   const router = useRouter();
   const { setUserId } = useContext(ValidationContext)!;
@@ -32,7 +33,7 @@ const Login = () => {
   ]);
   const [checked, setChecked] = useState<boolean>(false);
   const { colors, dark, setScheme } = useTheme();
-  const { requestLogin } = useLogin();
+  const { loading, requestLogin } = useLogin();
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -72,8 +73,12 @@ const Login = () => {
           },
         ]}
       >
-        {/* <Card style={styles.card}> */}
-
+        {loading && (
+          <LoadingOverlay
+            visible={loading}
+            message="Please wait while we log you in ..."
+          />
+        )}
         <Header title="Login" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.logoContainer}>
@@ -83,7 +88,9 @@ const Login = () => {
               style={styles.logo}
             />
           </View>
-          {errorMessage && <Text>{errorMessage}</Text>}
+          {errorMessage && (
+            <Text style={{ color: COLORS.error }}>{errorMessage}</Text>
+          )}
           <Input
             id="email"
             onInputChanged={(id, value) => {
@@ -128,7 +135,7 @@ const Login = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <OrSeparator text="or continue with" />
+            {/* <OrSeparator text="or continue with" />
 
             <View style={styles.socialBtnContainer}>
               <SocialButton
@@ -141,7 +148,7 @@ const Login = () => {
                 onPress={facebookAuthHandler}
               />
               <SocialButton icon={icons.google} onPress={googleAuthHandler} />
-            </View>
+            </View> */}
             <OrSeparator text="" />
             <View style={styles.CountineAsGuest}>
               <TouchableOpacity
