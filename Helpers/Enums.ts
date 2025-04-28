@@ -1,13 +1,19 @@
 export enum UserRole {
-    Admin = 'Admin',
-    User = 'User',
-    Guest = 'Guest',
-    Moderator = 'Moderator'
+    SuperAdmin = 'SuperAdmin',
+    BusinessAdmin = 'BusinessAdmin',
+    Freelancer = 'Freelancer',
+    Client = 'Client',
+    BusinessEmployee = 'BusinessEmployee',
+    CustomerSupport = 'CustomerSupport',
+    Guest = 'Guest'
 }
 
 export const UserRoleIds = {
-    Admin: 1,
-    User: 2,
-    Guest: 3,
-    Moderator: 4
+    SuperAdmin: 1,
+    BusinessAdmin: 2,
+    Freelancer: 3,
+    Client: 4,
+    BusinessEmployee: 5,
+    CustomerSupport: 6,
+    Guest: 7
 };

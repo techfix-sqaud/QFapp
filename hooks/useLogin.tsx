@@ -4,7 +4,7 @@ import quickFixAPI, { configartion, resetConfigartion } from "../Helpers/Axios";
 import AuthContext from "../contexts/AuthContext";
 import { useRouter } from "expo-router";
 import ValidationContext from "../contexts/ValidationContext";
-import { UserRole } from "../Helpers/Enums";
+import { UserRole, UserRoleIds } from "../Helpers/Enums";
 
 const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -62,7 +62,7 @@ const useLogin = () => {
           },
         });
         if (redirect) {
-          if (user.role_id === 1) {
+          if (user.role_id === UserRoleIds.SuperAdmin) {
             router.push("/Dashboard");
           } else router.push("/");
         }
@@ -89,6 +89,7 @@ const useLogin = () => {
     setErrorMessage: (message: string) => void
   ) => {
     try {
+      setLoading(true);
       let data;
       try {
         const response = await quickFixAPI.post("/Account/login", {
@@ -99,7 +100,7 @@ const useLogin = () => {
       } catch (error) {
         console.error("Login request failed", error);
         setErrorMessage(
-          "An error occurred while trying to log in. Please try again."
+          "Invalid credentials. Please check your username and password and try again."
         );
         return;
       }
@@ -116,6 +117,8 @@ const useLogin = () => {
       setErrorMessage(
         "Invalid credentials. Please check your username and password and try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
