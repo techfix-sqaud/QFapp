@@ -15,6 +15,7 @@ interface InputProps {
   icon?: any;
   label?: string;
   editable?: boolean;
+  required?: boolean;
   placeholder?: string;
   placeholderTextColor?: string;
   errorText?: string[];
@@ -100,7 +101,9 @@ const Input = (props: InputProps) => {
             { color: dark ? COLORS.white : COLORS.black },
             !disabled ? styles.disabledInput : styles.input,
           ]}
-          placeholder={props.placeholder}
+          placeholder={
+            props.required ? `${props.placeholder} *` : props.placeholder
+          }
           placeholderTextColor={props.placeholderTextColor}
           autoCapitalize="none"
         />

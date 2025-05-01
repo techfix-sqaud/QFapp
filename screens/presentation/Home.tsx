@@ -356,24 +356,24 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        {renderHeader()}
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {renderSearchBar()}
-          {renderBanner()}
-          {renderCategories()}
-          {renderTopServices()}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+    // <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {renderHeader()}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {renderSearchBar()}
+        {renderBanner()}
+        {renderCategories()}
+        {renderTopServices()}
+      </ScrollView>
+    </View>
+    // </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    // backgroundColor: COLORS.white,
   },
   container: {
     flex: 1,

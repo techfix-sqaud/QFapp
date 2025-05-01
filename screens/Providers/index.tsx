@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Providers from "../../Components/ProviderManagement/Providers";
 export default function ProvidersManagment() {
