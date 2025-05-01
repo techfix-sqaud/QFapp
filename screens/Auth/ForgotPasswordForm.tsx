@@ -89,12 +89,11 @@ const ForgotPasswordForm = () => {
     //   {/* </View> */}
     // </SafeAreaView>
 
-    <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        {/* <Header title="Change Password" /> */}
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.logoContainer}>
-            {/* <Image
+    <View style={[styles.container]}>
+      {/* <Header title="Change Password" /> */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.logoContainer}>
+          {/* <Image
               source={
                 dark
                   ? illustrations.passwordSuccessDark
@@ -103,54 +102,50 @@ const ForgotPasswordForm = () => {
               resizeMode="contain"
               style={styles.success}
             /> */}
-          </View>
-          <Text
-            style={[
-              styles.title,
-              { color: dark ? COLORS.white : COLORS.black },
-            ]}
-          >
-            Reset Password
-          </Text>
-          <Input
-            id="email"
-            onInputChanged={(id, value) => {
-              setEmail(value);
-            }}
-            placeholder="Email"
-            placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-            icon={icons.email}
-            errorText={errorMessage.length > 0 ? errorMessage : []}
-            keyboardType="email-address"
-          />
+        </View>
+        <Text
+          style={[styles.title, { color: dark ? COLORS.white : COLORS.black }]}
+        >
+          Reset Password
+        </Text>
+        <Input
+          id="email"
+          onInputChanged={(id, value) => {
+            setEmail(value);
+          }}
+          placeholder="Email"
+          placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
+          icon={icons.email}
+          errorText={errorMessage.length > 0 ? errorMessage : []}
+          keyboardType="email-address"
+        />
 
-          <View style={styles.checkBoxContainer}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={[
-                    styles.privacy,
-                    {
-                      color: dark ? COLORS.white : COLORS.black,
-                    },
-                  ]}
-                >
-                  Remember me
-                </Text>
-              </View>
+        <View style={styles.checkBoxContainer}>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={[
+                  styles.privacy,
+                  {
+                    color: dark ? COLORS.white : COLORS.black,
+                  },
+                ]}
+              >
+                Remember me
+              </Text>
             </View>
           </View>
-          <View></View>
-        </ScrollView>
-        <Button
-          title="Continue"
-          filled
-          onPress={(): void => console.log(true)}
-          style={styles.button}
-        />
-        {/* {renderModal()} */}
-      </View>
-    </SafeAreaView>
+        </View>
+        <View></View>
+      </ScrollView>
+      <Button
+        title="Continue"
+        filled
+        onPress={(): void => console.log(true)}
+        style={styles.button}
+      />
+      {/* {renderModal()} */}
+    </View>
   );
 };
 

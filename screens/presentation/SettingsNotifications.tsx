@@ -1,6 +1,5 @@
 import { View, StyleSheet } from "react-native";
 import React, { FC, useState } from "react";
-import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native-virtualized-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../../Helpers/theme/ThemeProvider";
@@ -65,67 +64,64 @@ const SettingsNotifications = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <StatusBar hidden />
-        <Header title="Notifications" />
-        <ScrollView
-          style={styles.settingsContainer}
-          showsVerticalScrollIndicator={false}
-        >
-          <GlobalSettingsItem
-            title="General Notifications"
-            isNotificationEnabled={isGeneralNotificationsEnabled}
-            toggleNotificationEnabled={toggleGeneralNotifications}
-          />
-          <GlobalSettingsItem
-            title="Sound"
-            isNotificationEnabled={isSoundEnabled}
-            toggleNotificationEnabled={toggleSound}
-          />
-          <GlobalSettingsItem
-            title="Vibrate"
-            isNotificationEnabled={isVibrateEnabled}
-            toggleNotificationEnabled={toggleVibrate}
-          />
-          <GlobalSettingsItem
-            title="Special Offers"
-            isNotificationEnabled={specialOffersEnabled}
-            toggleNotificationEnabled={toggleSpecialOffers}
-          />
-          <GlobalSettingsItem
-            title="Promo & Discount"
-            isNotificationEnabled={promoDiscountEnabled}
-            toggleNotificationEnabled={toggleDiscountEnabled}
-          />
-          <GlobalSettingsItem
-            title="Payments"
-            isNotificationEnabled={isPaymentEnabled}
-            toggleNotificationEnabled={togglePayments}
-          />
-          <GlobalSettingsItem
-            title="Cashback"
-            isNotificationEnabled={isCashbackEnabled}
-            toggleNotificationEnabled={toggleCashback}
-          />
-          <GlobalSettingsItem
-            title="App Updates"
-            isNotificationEnabled={isAppUpdatesEnabled}
-            toggleNotificationEnabled={toggleAppUpdates}
-          />
-          <GlobalSettingsItem
-            title="New Service Available"
-            isNotificationEnabled={newServiceAvailable}
-            toggleNotificationEnabled={toggleNewServiceAvailable}
-          />
-          <GlobalSettingsItem
-            title="New Tips Available"
-            isNotificationEnabled={newTipsAvailable}
-            toggleNotificationEnabled={toggleNewTipsAvailable}
-          />
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Header title="Notifications" />
+      <ScrollView
+        style={styles.settingsContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <GlobalSettingsItem
+          title="General Notifications"
+          isNotificationEnabled={isGeneralNotificationsEnabled}
+          toggleNotificationEnabled={toggleGeneralNotifications}
+        />
+        <GlobalSettingsItem
+          title="Sound"
+          isNotificationEnabled={isSoundEnabled}
+          toggleNotificationEnabled={toggleSound}
+        />
+        <GlobalSettingsItem
+          title="Vibrate"
+          isNotificationEnabled={isVibrateEnabled}
+          toggleNotificationEnabled={toggleVibrate}
+        />
+        <GlobalSettingsItem
+          title="Special Offers"
+          isNotificationEnabled={specialOffersEnabled}
+          toggleNotificationEnabled={toggleSpecialOffers}
+        />
+        <GlobalSettingsItem
+          title="Promo & Discount"
+          isNotificationEnabled={promoDiscountEnabled}
+          toggleNotificationEnabled={toggleDiscountEnabled}
+        />
+        <GlobalSettingsItem
+          title="Payments"
+          isNotificationEnabled={isPaymentEnabled}
+          toggleNotificationEnabled={togglePayments}
+        />
+        <GlobalSettingsItem
+          title="Cashback"
+          isNotificationEnabled={isCashbackEnabled}
+          toggleNotificationEnabled={toggleCashback}
+        />
+        <GlobalSettingsItem
+          title="App Updates"
+          isNotificationEnabled={isAppUpdatesEnabled}
+          toggleNotificationEnabled={toggleAppUpdates}
+        />
+        <GlobalSettingsItem
+          title="New Service Available"
+          isNotificationEnabled={newServiceAvailable}
+          toggleNotificationEnabled={toggleNewServiceAvailable}
+        />
+        <GlobalSettingsItem
+          title="New Tips Available"
+          isNotificationEnabled={newTipsAvailable}
+          toggleNotificationEnabled={toggleNewTipsAvailable}
+        />
+      </ScrollView>
+    </View>
   );
 };
 

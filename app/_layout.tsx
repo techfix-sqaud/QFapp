@@ -4,13 +4,12 @@ import {
   KeyboardAvoidingView,
   SafeAreaView,
   Platform,
-  View,
   StyleSheet,
   StatusBar as MobileStatusBar,
 } from "react-native";
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Head } from "expo-head";
-import { StatusBar } from "expo-status-bar";
 import { Slot, usePathname } from "expo-router";
 import { ThemeProvider, useTheme } from "../Helpers/theme/ThemeProvider";
 import WebNavigation from "../Components/Navigation/WebNavigation";
@@ -26,6 +25,7 @@ import { COLORS } from "../constants";
 
 const Layout = () => {
   const [UserState, dispatch] = useReducer(authReducer, initialState);
+  const { colors, dark } = useTheme();
   const [userId, validationDispatch] = useReducer(
     validationReducer,
     initialValidationState
@@ -58,6 +58,7 @@ const InnerLayout = () => {
             style={[
               styles.mobileSafeArea,
               { backgroundColor: dark ? COLORS.dark1 : COLORS.white },
+              // Removed invalid 'color' property
             ]}
           >
             <KeyboardAvoidingView
@@ -84,7 +85,6 @@ const InnerLayout = () => {
       return <Slot screenOptions={{ title: "quickFix" }} />;
     }
   };
-
   return (
     <>
       {Platform.OS === "web" && (
@@ -92,8 +92,12 @@ const InnerLayout = () => {
           <style>{/* Add any head styles if needed */}</style>
         </Head>
       )}
+      <ExpoStatusBar
+        style={dark ? "light" : "dark"}
+        backgroundColor={dark ? COLORS.dark1 : COLORS.white}
+        translucent={true}
+      />
       {renderContent()}
-      <StatusBar style={dark ? "light" : "dark"} />
     </>
   );
 };

@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Clients from "../../Components/ClientsManagment/Clients";
 export default function ClientsManagment() {
