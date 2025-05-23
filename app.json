@@ -1,17 +1,20 @@
 {
   "expo": {
     "name": "instant",
-    "slug": "instant",
+    "slug": "quickFix",
     "scheme": "your-app-scheme",
     "version": "1.0.0",
     "orientation": "portrait",
     "jsEngine": "hermes",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a79f1c9a-af65-4d9c-99e7-649d6fdfef1c"
     },
     "assetBundlePatterns": [
       "**/*"

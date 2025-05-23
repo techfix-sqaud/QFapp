@@ -148,7 +148,7 @@ const Settings = () => {
         </View>
         <View style={styles.rightContainer}>
           <Switch
-            value={isDarkMode}
+            value={dark}
             onValueChange={toggleDarkMode}
             thumbColor={isDarkMode ? "#fff" : COLORS.white}
             trackColor={{ false: "#EEEEEE", true: COLORS.primary }}

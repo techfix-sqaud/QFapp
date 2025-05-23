@@ -21,21 +21,28 @@ const useLogin = () => {
     const expires = new Date();
     expires.setHours(expires.getHours() + 2);
 
-    dispatch({
-      type: "LOGIN",
-      payload: {
-        isAuthenticated: true,
-        userId: 0,
-        role: UserRole.Guest,
-        profile: "",
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        token: "",
-        expires: expires,
-      },
-    });
-    router.push("/Dashboard");
+    setLoading(true);
+    try {
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          isAuthenticated: true,
+          userId: 0,
+          role: UserRole.Guest,
+          profile: "",
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          token: "",
+          expires: expires,
+        },
+      });
+      router.push("/Dashboard");
+    } catch (error) {
+      console.error("Guest login failed", error);
+    } finally {
+      setLoading(false);
+    }
   };
   const HandleLogin = async (
     token: string,

@@ -9,13 +9,14 @@ import Button from "../../Components/custom/Button";
 import Header from "../../Components/custom/Head";
 import ValidationContext from "../../contexts/ValidationContext";
 import useLogin from "../../hooks/useLogin";
+import LoadingOverlay from "../../Components/custom/loadingOverlay";
 
 const OTPVerification = () => {
   const [time, setTime] = useState(55);
   const { colors, dark } = useTheme();
   const [otpCode, setOtpCode] = useState<string>("");
   const { userId } = useContext(ValidationContext)!;
-  const { HandleLogin, Validate } = useLogin();
+  const { HandleLogin, Validate, loading } = useLogin();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -35,6 +36,9 @@ const OTPVerification = () => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
+        {loading && (
+          <LoadingOverlay visible={loading} message="Verifying OTP..." />
+        )}
         <Header title="OTP Verification" />
         <ScrollView>
           <Text

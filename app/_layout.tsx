@@ -1,6 +1,5 @@
 import React, { useReducer } from "react";
 import {
-  ScrollView,
   KeyboardAvoidingView,
   SafeAreaView,
   Platform,
@@ -21,7 +20,6 @@ import {
   initialValidationState,
   validationReducer,
 } from "../contexts/ValidationProvider";
-import { COLORS } from "../constants";
 
 const Layout = () => {
   const [UserState, dispatch] = useReducer(authReducer, initialState);
@@ -57,25 +55,14 @@ const InnerLayout = () => {
           <SafeAreaView
             style={[
               styles.mobileSafeArea,
-              { backgroundColor: dark ? COLORS.dark1 : COLORS.white },
-              // Removed invalid 'color' property
+              { backgroundColor: colors.background },
             ]}
           >
             <KeyboardAvoidingView
               style={{ flex: 1 }}
               behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-              <ScrollView
-                automaticallyAdjustKeyboardInsets
-                style={{
-                  flex: 1,
-                  marginBottom: !isAnonymous ? 0 : 20,
-                  backgroundColor: colors.background,
-                }}
-                contentContainerStyle={{ flexGrow: 1 }}
-              >
-                <Slot />
-              </ScrollView>
+              <Slot />
               {!isAnonymous && UserState?.isAuthenticated && <BottomNav />}
             </KeyboardAvoidingView>
           </SafeAreaView>
@@ -85,6 +72,7 @@ const InnerLayout = () => {
       return <Slot screenOptions={{ title: "quickFix" }} />;
     }
   };
+
   return (
     <>
       {Platform.OS === "web" && (
@@ -92,11 +80,8 @@ const InnerLayout = () => {
           <style>{/* Add any head styles if needed */}</style>
         </Head>
       )}
-      <ExpoStatusBar
-        style={dark ? "light" : "dark"}
-        backgroundColor={dark ? COLORS.dark1 : COLORS.white}
-        translucent={true}
-      />
+      <ExpoStatusBar style={dark ? "light" : "dark"} translucent={true} />
+
       {renderContent()}
     </>
   );

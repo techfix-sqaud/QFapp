@@ -23,7 +23,7 @@ export const tabs: Tab[] = [
     label: "Booking",
     icon: icons.document2,
     notFocused: icons.document2Outline,
-    path: "/Booking",
+    path: "/Bookings",
   },
   {
     name: "profile",

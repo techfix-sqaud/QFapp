@@ -1,10 +1,10 @@
 const ornament = require("../assets/images/ornament.png");
 
-const onboarding1 = require("../assets/images/onboarding1.png");
-const onboarding2 = require("../assets/images/onboarding2.png");
-const onboarding3 = require("../assets/images/onboarding3.png");
-const onboarding4 = require("../assets/images/onboarding4.png");
-const onboarding5 = require("../assets/images/onboarding5.png");
+const GS1 = require("../assets/images/GS1.png");
+const GS2 = require("../assets/images/GS2.png");
+const GS3 = require("../assets/images/GS3.png");
+const GS4 = require("../assets/images/GS4.png");
+const GS5 = require("../assets/images/GS5.png");
 const onboarding6 = require("../assets/images/onboarding6.png");
 const onboarding7 = require("../assets/images/onboarding7.png");
 const onboarding8 = require("../assets/images/onboarding8.png");
@@ -46,11 +46,11 @@ export default {
     elipseCard,
     rectangleCard,
     
-    onboarding1,
-    onboarding2,
-    onboarding3,
-    onboarding4,
-    onboarding5,
+    GS1,
+    GS2,
+    GS3,
+    GS4,
+    GS5,
     onboarding6,
     onboarding7,
     onboarding8,

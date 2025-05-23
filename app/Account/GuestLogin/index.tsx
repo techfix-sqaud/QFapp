@@ -18,6 +18,7 @@ import Input from "../../../Components/custom/Input";
 import icons from "../../../constants/icons";
 import Button from "../../../Components/custom/Button";
 import OrSeparator from "../../../Components/custom/OrSeparator";
+import LoadingOverlay from "../../../Components/custom/loadingOverlay";
 
 const index = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const index = () => {
     "",
   ]);
   const { colors, dark, setScheme } = useTheme();
-  const { requestLoginAsGuest } = useLogin();
+  const { requestLoginAsGuest, loading } = useLogin();
 
   const handleContinueAsGuest = async (e: any) => {
     e.preventDefault();
@@ -55,6 +56,12 @@ const index = () => {
           },
         ]}
       >
+        {loading && (
+          <LoadingOverlay
+            visible={loading}
+            message="Please wait while we log you in ..."
+          />
+        )}
         <Header title="Guest Login" />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.logoContainer}>
