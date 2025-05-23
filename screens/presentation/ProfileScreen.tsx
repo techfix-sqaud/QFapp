@@ -140,7 +140,7 @@ const ProfileScreen = () => {
       <SettingsItem
         icon={icons.calendar}
         name="My Booking"
-        onPress={() => router.push("/MyBookings")}
+        onPress={() => router.push("/Users/TrackBooking")}
       />
       {UserState.role !== UserRole.Guest ? (
         <SettingsItem

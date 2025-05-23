@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { COLORS } from "../../constants";
+import { useTheme } from "../../Helpers/theme/ThemeProvider";
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,11 +21,16 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   message,
 }) => {
   if (!visible) return null;
+  const { colors, dark } = useTheme();
 
-  console.log("LoadingOverlay rendered", visible);
   return (
     <View style={styles.overlay}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: dark ? COLORS.gray3 : colors.background },
+        ]}
+      >
         <ActivityIndicator size="large" color={COLORS.primary} />
         {message && <Text style={styles.message}>{message}</Text>}
       </View>
@@ -43,7 +49,6 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   container: {
-    backgroundColor: "white",
     borderRadius: 12,
     paddingVertical: 20,
     paddingHorizontal: 30,
@@ -57,7 +62,7 @@ const styles = StyleSheet.create({
   },
   message: {
     marginTop: 10,
-    color: "#333",
+    color: COLORS.primary,
     fontSize: 16,
     fontWeight: "500",
     textAlign: "center",

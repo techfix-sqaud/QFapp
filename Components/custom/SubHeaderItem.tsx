@@ -5,8 +5,8 @@ import { COLORS, SIZES } from "../../constants";
 
 interface SubHeaderItemProps {
   title: string;
-  onPress: () => void;
-  navTitle: string;
+  onPress?: () => void;
+  navTitle?: string;
 }
 
 const SubHeaderItem: React.FC<SubHeaderItemProps> = ({
